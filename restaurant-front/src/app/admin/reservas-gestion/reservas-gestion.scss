@@ -1,0 +1,621 @@
+.reservas-gestion-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+// Estilos para banners de alerta
+.alert-banner {
+  padding: 12px 16px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 500;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  
+  .close-alert {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0;
+    color: inherit;
+    opacity: 0.7;
+    
+    &:hover {
+      opacity: 1;
+    }
+  }
+  
+  &.success {
+    background: #e8f5e8;
+    color: #2e7d32;
+    border-left: 4px solid #4caf50;
+  }
+  
+  &.error {
+    background: #ffebee;
+    color: #c62828;
+    border-left: 4px solid #f44336;
+  }
+}
+
+// Estilos para la sección de filtros
+.filtros-section {
+  margin-bottom: 24px;
+  animation: fadeInUp 0.6s ease-out;
+  
+  .filtros-title {
+    color: #2d3436;
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+    
+    i {
+      color: #1976d2;
+      font-size: 1.2rem;
+      animation: pulse 2s infinite;
+    }
+    
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, #1976d2, #1565c0);
+      transition: width 0.6s ease;
+    }
+    
+    &:hover::after {
+      width: 100%;
+    }
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+// Estilos para la barra de filtros - Diseño moderno y atractivo
+.filtros-bar {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border: 1px solid #dee2e6;
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 20px rgba(25, 118, 210, 0.08);
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #1976d2, #1565c0, #42a5f5, #1976d2);
+    background-size: 200% 100%;
+    animation: gradientMove 3s ease-in-out infinite;
+  }
+  
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 16px;
+  align-items: center;
+  
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
+  // Estilos para los grupos de filtros
+  .filter-group {
+    position: relative;
+    display: flex;
+    align-items: center;
+    transition: transform 0.3s ease;
+    
+    &:hover {
+      transform: translateY(-2px);
+    }
+    
+    .filter-icon {
+      position: absolute;
+      left: 16px;
+      color: #1976d2;
+      font-size: 1rem;
+      z-index: 2;
+      transition: all 0.3s ease;
+    }
+    
+    input, select {
+      padding-left: 48px;
+    }
+    
+    &:hover .filter-icon {
+      color: #1565c0;
+      transform: scale(1.1);
+    }
+    
+    // Efecto de brillo en hover
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+      transition: left 0.5s ease;
+    }
+    
+    &:hover::after {
+      left: 100%;
+    }
+  }
+  
+  // Estilos para el campo de búsqueda
+  input[type="text"] {
+    background: white;
+    border: 2px solid #dee2e6;
+    border-radius: 12px;
+    padding: 14px 18px;
+    font-size: 1rem;
+    color: #2d3436;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(25, 118, 210, 0.05);
+    
+    &::placeholder {
+      color: #a0a0a0;
+      font-style: italic;
+    }
+    
+    &:focus {
+      outline: none;
+      border-color: #1976d2;
+      box-shadow: 0 0 0 4px rgba(25, 118, 210, 0.1);
+      transform: translateY(-1px);
+    }
+    
+    &:hover {
+      border-color: #adb5bd;
+      box-shadow: 0 4px 12px rgba(25, 118, 210, 0.1);
+    }
+  }
+  
+  // Estilos para el select de estado
+  select {
+    background: white;
+    border: 2px solid #dee2e6;
+    border-radius: 12px;
+    padding: 14px 18px;
+    font-size: 1rem;
+    color: #2d3436;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(25, 118, 210, 0.05);
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%231976d2' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 16px;
+    padding-right: 40px;
+    
+    &:focus {
+      outline: none;
+      border-color: #1976d2;
+      box-shadow: 0 0 0 4px rgba(25, 118, 210, 0.1);
+      transform: translateY(-1px);
+    }
+    
+    &:hover {
+      border-color: #adb5bd;
+      box-shadow: 0 4px 12px rgba(25, 118, 210, 0.1);
+    }
+    
+    option {
+      background: white;
+      color: #2d3436;
+      padding: 8px;
+      
+      &:hover {
+        background: #f8f9fa;
+      }
+    }
+  }
+  
+  // Estilos para el input de fecha
+  input[type="date"] {
+    background: white;
+    border: 2px solid #dee2e6;
+    border-radius: 12px;
+    padding: 14px 18px;
+    font-size: 1rem;
+    color: #2d3436;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(25, 118, 210, 0.05);
+    cursor: pointer;
+    
+    &::-webkit-calendar-picker-indicator {
+      filter: invert(0.4) sepia(1) saturate(5) hue-rotate(200deg);
+      cursor: pointer;
+    }
+    
+    &:focus {
+      outline: none;
+      border-color: #1976d2;
+      box-shadow: 0 0 0 4px rgba(25, 118, 210, 0.1);
+      transform: translateY(-1px);
+    }
+    
+    &:hover {
+      border-color: #adb5bd;
+      box-shadow: 0 4px 12px rgba(25, 118, 210, 0.1);
+    }
+  }
+}
+
+@keyframes gradientMove {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.btn {
+  padding: 6px 18px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 8px;
+  font-size: 1rem;
+  transition: background 0.2s, box-shadow 0.2s;
+  box-shadow: 0 1px 2px rgba(25, 118, 210, 0.04);
+}
+.btn-primary { background: #1976d2; color: #fff; }
+.btn-primary:hover { background: #125ea7; }
+.btn-info { background: #0288d1; color: #fff; }
+.btn-info:hover { background: #02669b; }
+.btn-danger { background: #d32f2f; color: #fff; }
+.btn-danger:hover { background: #a31515; }
+.btn-secondary { background: #757575; color: #fff; }
+.btn-secondary:hover { background: #565656; }
+.btn-sm { font-size: 0.95rem; padding: 5px 14px; }
+
+.reservas-list {
+  margin-top: 24px;
+}
+
+.reservas-table-wrapper {
+  overflow-x: auto;
+}
+.reservas-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: #f5f7fa;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(25, 118, 210, 0.07);
+  margin-top: 8px;
+}
+.reservas-table th, .reservas-table td {
+  padding: 14px 12px;
+  text-align: left;
+}
+.reservas-table th {
+  background: #e3eaf4;
+  font-weight: 600;
+  color: #1976d2;
+  border-bottom: 2px solid #dbe6f6;
+}
+.reservas-table tr:not(:last-child) td {
+  border-bottom: 1px solid #e0e0e0;
+}
+.estado-pendiente {
+  color: #fbc02d;
+  font-weight: 600;
+}
+.estado-confirmada {
+  color: #388e3c;
+  font-weight: 600;
+}
+.estado-cancelada {
+  color: #d32f2f;
+  font-weight: 600;
+}
+.no-data {
+  color: #757575;
+  text-align: center;
+  margin: 32px 0;
+}
+.error-message {
+  color: #d32f2f;
+  margin: 16px 0;
+  text-align: center;
+}
+
+// Estilos para modales
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 8px;
+  padding: 24px;
+  max-width: 500px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  
+  h3 {
+    margin-bottom: 20px;
+    color: #1976d2;
+    font-size: 1.5rem;
+  }
+}
+
+.form-group {
+  margin-bottom: 16px;
+  
+  label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #333;
+  }
+  
+  input, select {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    
+    &:focus {
+      outline: none;
+      border-color: #1976d2;
+      box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.2);
+    }
+  }
+}
+
+.modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid #eee;
+}
+
+.reserva-details {
+  .detail-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+    
+    &:last-child {
+      border-bottom: none;
+    }
+    
+    strong {
+      font-weight: 600;
+      color: #333;
+    }
+  }
+}
+
+.success-message {
+  background: #e8f5e8;
+  color: #2e7d32;
+  padding: 12px;
+  border-radius: 4px;
+  margin-bottom: 16px;
+  text-align: center;
+  font-weight: 600;
+  border-left: 4px solid #4caf50;
+}
+
+@media (max-width: 700px) {
+  .reservas-gestion-container {
+    padding: 8px;
+  }
+  .reservas-table th, .reservas-table td {
+    padding: 8px 4px;
+    font-size: 0.98em;
+  }
+}
+
+// Estilos para el modal de pedidos
+.loading-container {
+  text-align: center;
+  padding: 40px 20px;
+  
+  .loading-spinner {
+    i {
+      font-size: 2rem;
+      color: #1976d2;
+      margin-bottom: 16px;
+    }
+    
+    p {
+      color: #666;
+      margin: 0;
+    }
+  }
+}
+
+.no-pedidos {
+  text-align: center;
+  padding: 40px 20px;
+  color: #666;
+  
+  i {
+    font-size: 3rem;
+    color: #ccc;
+    margin-bottom: 16px;
+  }
+  
+  p {
+    margin: 0;
+    font-size: 1.1rem;
+  }
+}
+
+.pedidos-list {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.pedido-item {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  padding: 16px;
+  background: #fafafa;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.pedido-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  
+  .pedido-id {
+    .id-number {
+      font-weight: 600;
+      color: #1976d2;
+      font-size: 1.1rem;
+    }
+  }
+  
+  .pedido-status {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    
+    i {
+      font-size: 0.7rem;
+    }
+    
+    &.estado-proceso {
+      color: #fbc02d;
+    }
+    
+    &.estado-completado {
+      color: #388e3c;
+    }
+    
+    &.estado-cancelado {
+      color: #d32f2f;
+    }
+  }
+}
+
+.pedido-content {
+  .pedido-info {
+    margin-bottom: 12px;
+    
+    .info-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+      font-size: 0.9rem;
+      
+      i {
+        color: #666;
+        width: 16px;
+      }
+      
+      strong {
+        color: #333;
+      }
+    }
+  }
+}
+
+.pedido-detalles {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #e0e0e0;
+  
+  h4 {
+    margin: 0 0 8px 0;
+    font-size: 1rem;
+    color: #333;
+  }
+  
+  .detalles-list {
+    .detalle-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 4px 0;
+      font-size: 0.9rem;
+      
+      .producto-nombre {
+        flex: 1;
+        font-weight: 500;
+      }
+      
+      .cantidad {
+        color: #666;
+        margin: 0 8px;
+      }
+      
+      .precio {
+        font-weight: 600;
+        color: #1976d2;
+      }
+    }
+  }
+}
+
+.pedido-actions {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #e0e0e0;
+  text-align: right;
+}

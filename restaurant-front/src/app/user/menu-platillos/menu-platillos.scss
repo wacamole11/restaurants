@@ -1,0 +1,196 @@
+.menu-platillos-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.page-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.restaurant-welcome {
+  margin-bottom: 24px;
+  padding: 20px;
+  background: linear-gradient(135deg, rgba(177, 42, 42, 0.05) 0%, rgba(217, 142, 4, 0.05) 100%);
+  border-radius: 12px;
+  border: 1px solid rgba(217, 142, 4, 0.2);
+}
+
+.restaurant-brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 12px;
+  
+  .restaurant-logo {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #E95D8F 0%, #B12A2A 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(233, 93, 143, 0.3);
+    
+    i {
+      font-size: 1.8rem;
+      color: white;
+    }
+  }
+  
+  .restaurant-info {
+    h1 {
+      margin: 0 0 4px 0;
+      font-size: 2rem;
+      font-weight: 700;
+      color: #B12A2A; /* Rojo Huamanguino */
+    }
+    
+    .restaurant-description {
+      margin: 0;
+      font-size: 1rem;
+      color: #4A2E1D; /* Café Quinua Negra */
+      font-style: italic;
+    }
+  }
+}
+
+.page-content {
+  h2 {
+    color: #B12A2A; /* Rojo Huamanguino */
+    font-weight: 700;
+    margin-bottom: 8px;
+    font-size: 1.8em;
+  }
+}
+.page-header h1 {
+  color: #B12A2A; /* Rojo Huamanguino */
+  font-weight: 700;
+  margin-bottom: 8px;
+  font-size: 2.1em;
+}
+.page-header p {
+  color: #4A2E1D; /* Café Quinua Negra */
+  font-size: 1.08em;
+}
+
+.loading-container, .error-container, .empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 220px;
+  color: #B12A2A; /* Rojo Huamanguino */
+}
+.loading-container i, .error-container i, .empty-state i {
+  font-size: 2.5em;
+  margin-bottom: 12px;
+}
+.error-container {
+  color: #D98E04; /* Mostaza Tierra */
+}
+.error-container i {
+  color: #D98E04; /* Mostaza Tierra */
+}
+.btn-retry {
+  background: #B12A2A; /* Rojo Huamanguino */
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 18px;
+  font-size: 1em;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  transition: background 0.2s;
+}
+.btn-retry:hover {
+  background: #8B1A1A; /* Rojo Huamanguino más oscuro */
+}
+
+.platillos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  gap: 24px;
+  margin-top: 24px;
+}
+
+.platillo-card {
+  background: #F8EDE3; /* Crema Chacra */
+  border: 1.5px solid #D98E04; /* Mostaza Tierra */
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(217, 142, 4, 0.1);
+  padding: 20px 18px 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.platillo-card:hover {
+  box-shadow: 0 6px 24px rgba(177, 42, 42, 0.15); /* Rojo Huamanguino con transparencia */
+  transform: translateY(-2px) scale(1.01);
+}
+.platillo-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.platillo-header h2 {
+  font-size: 1.2em;
+  font-weight: 700;
+  color: #B12A2A; /* Rojo Huamanguino */
+  margin: 0;
+}
+.platillo-categoria {
+  background: rgba(27, 154, 148, 0.1); /* Turquesa Andino con transparencia */
+  color: #1B9A94; /* Turquesa Andino */
+  border-radius: 12px;
+  padding: 4px 12px;
+  font-size: 0.95em;
+  font-weight: 500;
+}
+.platillo-content {
+  margin-bottom: 8px;
+}
+.platillo-descripcion {
+  color: #4A2E1D; /* Café Quinua Negra */
+  font-size: 1em;
+  margin: 0;
+}
+.platillo-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+}
+.platillo-precio {
+  color: #1B9A94; /* Turquesa Andino */
+  font-weight: 700;
+  font-size: 1.1em;
+}
+.platillo-disponible {
+  color: #1B9A94; /* Turquesa Andino */
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+@media (max-width: 768px) {
+  .menu-platillos-container {
+    padding: 12px;
+  }
+  .platillos-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .platillo-card {
+    padding: 14px;
+  }
+}

@@ -1,0 +1,343 @@
+.mesas-disponibles {
+  max-width: 950px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.page-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.restaurant-welcome {
+  margin-bottom: 24px;
+  padding: 20px;
+  background: linear-gradient(135deg, rgba(177, 42, 42, 0.05) 0%, rgba(217, 142, 4, 0.05) 100%);
+  border-radius: 12px;
+  border: 1px solid rgba(217, 142, 4, 0.2);
+}
+
+.restaurant-brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 12px;
+  
+  .restaurant-logo {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #E95D8F 0%, #B12A2A 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(233, 93, 143, 0.3);
+    
+    i {
+      font-size: 1.8rem;
+      color: white;
+    }
+  }
+  
+  .restaurant-info {
+    h1 {
+      margin: 0 0 4px 0;
+      font-size: 2rem;
+      font-weight: 700;
+      color: #B12A2A; /* Rojo Huamanguino */
+    }
+    
+    .restaurant-description {
+      margin: 0;
+      font-size: 1rem;
+      color: #4A2E1D; /* Café Quinua Negra */
+      font-style: italic;
+    }
+  }
+}
+
+.page-content {
+  h2 {
+    color: #B12A2A; /* Rojo Huamanguino */
+    font-weight: 700;
+    margin-bottom: 8px;
+    font-size: 1.8em;
+  }
+}
+.page-header h1 {
+  color: #B12A2A; /* Rojo Huamanguino */
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.page-header p {
+  color: #4A2E1D; /* Café Quinua Negra */
+  font-size: 1.08em;
+  margin-bottom: 12px;
+}
+
+.user-info {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(27, 154, 148, 0.1); /* Turquesa Andino con transparencia */
+  color: #1B9A94; /* Turquesa Andino */
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-weight: 500;
+  font-size: 0.95em;
+  border: 1px solid #1B9A94; /* Turquesa Andino */
+}
+
+.user-info i {
+  font-size: 0.9em;
+}
+
+.mesas-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.mesa-card {
+  background: #F8EDE3; /* Crema Chacra */
+  border: 1.5px solid #D98E04; /* Mostaza Tierra */
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(217, 142, 4, 0.1);
+  padding: 20px 18px 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.mesa-card:hover {
+  box-shadow: 0 6px 24px rgba(177, 42, 42, 0.15); /* Rojo Huamanguino con transparencia */
+  transform: translateY(-2px) scale(1.01);
+}
+.mesa-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.mesa-number .number {
+  font-size: 1.5em;
+  font-weight: 700;
+  color: #B12A2A; /* Rojo Huamanguino */
+}
+.mesa-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  font-size: 1.05em;
+}
+.mesa-status.disponible {
+  color: #1B9A94; /* Turquesa Andino */
+}
+.mesa-content {
+  margin-bottom: 8px;
+}
+.mesa-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #4A2E1D; /* Café Quinua Negra */
+  font-size: 1em;
+}
+.mesa-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+.btn-reservar {
+  background: #B12A2A; /* Rojo Huamanguino */
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 18px;
+  font-size: 1em;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.2s, box-shadow 0.2s;
+  box-shadow: 0 1px 2px rgba(177, 42, 42, 0.1);
+}
+.btn-reservar:hover {
+  background: #8B1A1A; /* Rojo Huamanguino más oscuro */
+}
+.empty-state {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 180px;
+}
+.empty-card {
+  background: #F8EDE3; /* Crema Chacra */
+  border: 1.5px solid #D98E04; /* Mostaza Tierra */
+  border-radius: 10px;
+  padding: 32px 24px;
+  text-align: center;
+  color: #4A2E1D; /* Café Quinua Negra */
+  box-shadow: 0 1px 4px rgba(217, 142, 4, 0.1);
+}
+.empty-card i {
+  font-size: 2.2em;
+  color: #E95D8F; /* Rosado Ñusta */
+  margin-bottom: 8px;
+}
+.empty-card h3 {
+  margin: 10px 0 4px 0;
+  color: #B12A2A; /* Rojo Huamanguino */
+  font-weight: 600;
+}
+.empty-card p {
+  font-size: 1em;
+}
+
+.modal {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+.modal-content {
+  background: #fff;
+  border-radius: 10px;
+  padding: 32px 24px;
+  min-width: 320px;
+  max-width: 95vw;
+  box-shadow: 0 8px 32px rgba(177, 42, 42, 0.15); /* Rojo Huamanguino con transparencia */
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.modal-content h3 {
+  margin-top: 0;
+  color: #B12A2A; /* Rojo Huamanguino */
+  font-weight: 600;
+}
+
+.reserva-info {
+  background: rgba(27, 154, 148, 0.05); /* Turquesa Andino con transparencia */
+  border: 1px solid #1B9A94; /* Turquesa Andino */
+  border-radius: 6px;
+  padding: 12px 16px;
+  margin-bottom: 8px;
+}
+
+.reserva-info p {
+  margin: 4px 0;
+  color: #4A2E1D; /* Café Quinua Negra */
+  font-size: 0.95em;
+}
+
+.reserva-info strong {
+  color: #1B9A94; /* Turquesa Andino */
+  font-weight: 600;
+}
+
+.horario-info {
+  background: rgba(217, 142, 4, 0.1); /* Mostaza Tierra con transparencia */
+  border: 1px solid #D98E04; /* Mostaza Tierra */
+  border-radius: 6px;
+  padding: 12px 16px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  
+  i {
+    color: #D98E04; /* Mostaza Tierra */
+    font-size: 1.1em;
+  }
+  
+  p {
+    margin: 2px 0;
+    color: #4A2E1D; /* Café Quinua Negra */
+    font-size: 0.9em;
+    font-weight: 500;
+  }
+  
+  .horario-note {
+    color: #D98E04; /* Mostaza Tierra */
+    font-size: 0.85em;
+    font-style: italic;
+  }
+}
+
+.modal-content label {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+  font-weight: 500;
+  color: #B12A2A; /* Rojo Huamanguino */
+}
+.modal-content input {
+  margin-top: 4px;
+  padding: 7px 10px;
+  border: 1px solid #b0bec5;
+  border-radius: 4px;
+  font-size: 1em;
+  background: #f8fafc;
+  transition: border 0.2s;
+}
+.modal-content input:focus {
+  border: 1.5px solid #B12A2A; /* Rojo Huamanguino */
+  outline: none;
+  background: #fff;
+}
+.modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 12px;
+}
+.btn-cancelar {
+  background: #4A2E1D; /* Café Quinua Negra */
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 18px;
+  font-size: 1em;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.btn-cancelar:hover {
+  background: #2A1A0F; /* Café Quinua Negra más oscuro */
+}
+.success-message {
+  color: #1B9A94; /* Turquesa Andino */
+  margin-top: 8px;
+  text-align: center;
+  font-weight: 500;
+}
+.error-message {
+  color: #d32f2f;
+  margin-top: 8px;
+  text-align: center;
+  font-weight: 500;
+}
+
+@media (max-width: 700px) {
+  .mesas-disponibles {
+    padding: 8px;
+  }
+  .mesas-grid {
+    gap: 12px;
+  }
+  .mesa-card {
+    padding: 12px 6px 10px 6px;
+  }
+}

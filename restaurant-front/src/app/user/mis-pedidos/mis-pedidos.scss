@@ -1,0 +1,986 @@
+.mis-pedidos-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.page-header {
+  text-align: center;
+  margin-bottom: 30px;
+  
+  h1 {
+    color: #B12A2A; /* Rojo Huamanguino */
+    margin-bottom: 10px;
+  }
+}
+
+.restaurant-welcome {
+  margin-bottom: 24px;
+  padding: 20px;
+  background: linear-gradient(135deg, rgba(177, 42, 42, 0.05) 0%, rgba(217, 142, 4, 0.05) 100%);
+  border-radius: 12px;
+  border: 1px solid rgba(217, 142, 4, 0.2);
+}
+
+.restaurant-brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 12px;
+  
+  .restaurant-logo {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #E95D8F 0%, #B12A2A 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(233, 93, 143, 0.3);
+    
+    i {
+      font-size: 1.8rem;
+      color: white;
+    }
+  }
+  
+  .restaurant-info {
+    h1 {
+      margin: 0 0 4px 0;
+      font-size: 2rem;
+      font-weight: 700;
+      color: #B12A2A; /* Rojo Huamanguino */
+    }
+    
+    .restaurant-description {
+      margin: 0;
+      font-size: 1rem;
+      color: #4A2E1D; /* Café Quinua Negra */
+      font-style: italic;
+    }
+  }
+}
+
+.page-content {
+  h2 {
+    color: #B12A2A; /* Rojo Huamanguino */
+    font-weight: 700;
+    margin-bottom: 8px;
+    font-size: 1.8em;
+  }
+  
+  p {
+    color: #4A2E1D; /* Café Quinua Negra */
+    margin-bottom: 15px;
+  }
+  
+  .user-info {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: rgba(27, 154, 148, 0.1); /* Turquesa Andino con transparencia */
+    border-radius: 20px;
+    font-size: 0.9rem;
+    color: #1B9A94; /* Turquesa Andino */
+    margin-bottom: 15px;
+    border: 1px solid #1B9A94; /* Turquesa Andino */
+    
+    i {
+      color: #1B9A94; /* Turquesa Andino */
+    }
+  }
+  
+  .btn-primary {
+    background: #B12A2A; /* Rojo Huamanguino */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.95rem;
+    
+    &:hover {
+      background: #8B1A1A; /* Rojo Huamanguino más oscuro */
+    }
+  }
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+  
+  .loading-spinner {
+    text-align: center;
+    
+    i {
+      font-size: 2rem;
+      color: #B12A2A; /* Rojo Huamanguino */
+      margin-bottom: 10px;
+    }
+    
+    p {
+      color: #4A2E1D; /* Café Quinua Negra */
+    }
+  }
+}
+
+.error-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+  
+  .error-card {
+    text-align: center;
+    padding: 30px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    
+    i {
+      font-size: 3rem;
+      color: #D98E04; /* Mostaza Tierra */
+      margin-bottom: 15px;
+    }
+    
+    h3 {
+      color: #4A2E1D; /* Café Quinua Negra */
+      margin-bottom: 10px;
+    }
+    
+    p {
+      color: #4A2E1D; /* Café Quinua Negra */
+      margin-bottom: 20px;
+    }
+    
+    .btn-retry {
+      background: #B12A2A; /* Rojo Huamanguino */
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      
+      &:hover {
+        background: #8B1A1A; /* Rojo Huamanguino más oscuro */
+      }
+    }
+  }
+}
+
+.empty-state {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+  
+  .empty-card {
+    text-align: center;
+    padding: 40px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    
+    i {
+      font-size: 4rem;
+      color: #E95D8F; /* Rosado Ñusta */
+      margin-bottom: 20px;
+    }
+    
+    h3 {
+      color: #B12A2A; /* Rojo Huamanguino */
+      margin-bottom: 10px;
+    }
+    
+    p {
+      color: #4A2E1D; /* Café Quinua Negra */
+      margin-bottom: 25px;
+    }
+    
+    .btn-primary {
+      background: #B12A2A; /* Rojo Huamanguino */
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 5px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      
+      &:hover {
+        background: #8B1A1A; /* Rojo Huamanguino más oscuro */
+      }
+    }
+  }
+}
+
+.pedidos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 20px;
+}
+
+.pedido-card {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  
+  .pedido-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background: #f8f9fa;
+    border-bottom: 1px solid #e9ecef;
+    
+    .pedido-id {
+      .id-number {
+        font-weight: bold;
+        color: #333;
+        font-size: 1.1rem;
+      }
+    }
+    
+    .pedido-status {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      border-radius: 15px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      
+      &.estado-proceso {
+        background: #fff3cd;
+        color: #856404;
+      }
+      
+      &.estado-completado {
+        background: #d4edda;
+        color: #155724;
+      }
+      
+      &.estado-cancelado {
+        background: #f8d7da;
+        color: #721c24;
+      }
+    }
+  }
+  
+  .pedido-content {
+    padding: 20px;
+    
+    .pedido-info {
+      .info-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 10px;
+        
+        i {
+          color: #007bff;
+          width: 16px;
+        }
+        
+        span {
+          color: #333;
+        }
+      }
+    }
+  }
+  
+  .pedido-actions {
+    padding: 15px 20px;
+    background: #f8f9fa;
+    border-top: 1px solid #e9ecef;
+    display: flex;
+    gap: 10px;
+    
+    .btn-secondary {
+      background: #6c757d;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.9rem;
+      
+      &:hover {
+        background: #545b62;
+      }
+    }
+  }
+}
+
+// Modal para crear nuevo pedido
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.modal-content {
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  padding: 32px;
+  max-width: 600px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  animation: slideIn 0.3s ease-out;
+  
+  h3 {
+    color: #2c3e50;
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-bottom: 24px;
+    text-align: center;
+    position: relative;
+    
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 3px;
+      background: linear-gradient(90deg, #007bff, #0056b3);
+      border-radius: 2px;
+    }
+  }
+}
+
+.form-group {
+  margin-bottom: 24px;
+  
+  label {
+    display: block;
+    color: #495057;
+    font-weight: 500;
+    margin-bottom: 8px;
+    font-size: 0.95rem;
+  }
+  
+  select {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    font-size: 1rem;
+    background: #fff;
+    transition: all 0.3s ease;
+    
+    &:focus {
+      outline: none;
+      border-color: #007bff;
+      box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+    }
+  }
+}
+
+.no-reservas-message {
+  margin-top: 12px;
+  padding: 16px;
+  background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+  border-radius: 8px;
+  border-left: 4px solid #ffc107;
+  text-align: center;
+  
+  i {
+    font-size: 1.5rem;
+    color: #856404;
+    margin-bottom: 8px;
+  }
+  
+  p {
+    margin: 4px 0;
+    color: #856404;
+    font-size: 0.9rem;
+    
+    &:first-of-type {
+      font-weight: 600;
+    }
+  }
+}
+
+.platillos-section {
+  margin-top: 24px;
+  
+  h4 {
+    color: #2c3e50;
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 16px;
+    text-align: center;
+  }
+}
+
+.platillos-list {
+  max-height: 300px;
+  overflow-y: auto;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.platillo-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  border-bottom: 1px solid #f1f3f4;
+  transition: background-color 0.2s ease;
+  
+  &:last-child {
+    border-bottom: none;
+  }
+  
+  &:hover {
+    background: #f8f9fa;
+  }
+  
+  .platillo-info {
+    flex: 1;
+    
+    .platillo-nombre {
+      display: block;
+      font-weight: 600;
+      color: #2c3e50;
+      font-size: 1rem;
+      margin-bottom: 4px;
+    }
+    
+    .platillo-precio {
+      color: #28a745;
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+    
+    .platillo-categoria {
+      display: inline-block;
+      background: #e9ecef;
+      color: #6c757d;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      margin-left: 8px;
+    }
+  }
+  
+  .platillo-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    
+    .btn-add {
+      background: linear-gradient(135deg, #28a745, #20c997);
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      
+      &:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+      }
+    }
+    
+    .cantidad-controls {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      
+      button {
+        background: #6c757d;
+        color: white;
+        border: none;
+        width: 28px;
+        height: 28px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: all 0.2s ease;
+        
+        &:hover {
+          background: #545b62;
+        }
+      }
+      
+      input {
+        width: 50px;
+        text-align: center;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+        padding: 4px;
+        font-size: 0.9rem;
+        
+        &:focus {
+          outline: none;
+          border-color: #007bff;
+        }
+      }
+      
+      .btn-remove {
+        background: #dc3545;
+        color: white;
+        border: none;
+        padding: 6px 8px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        
+        &:hover {
+          background: #c82333;
+        }
+      }
+    }
+  }
+}
+
+.pedido-total {
+  margin-top: 20px;
+  padding: 16px;
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+  border-radius: 8px;
+  text-align: center;
+  
+  span {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #28a745;
+  }
+}
+
+.modal-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+  justify-content: center;
+  
+  .btn-primary {
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    min-width: 120px;
+    
+    &:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 123, 255, 0.3);
+    }
+    
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+  }
+  
+  .btn-secondary {
+    background: linear-gradient(135deg, #6c757d, #545b62);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    min-width: 120px;
+    
+    &:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(108, 117, 125, 0.3);
+    }
+    
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+  }
+  
+  .btn-danger {
+    background: linear-gradient(135deg, #dc3545, #c82333);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    min-width: 120px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    
+    &:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(220, 53, 69, 0.3);
+    }
+    
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+  }
+}
+
+.error-message {
+  background: linear-gradient(135deg, #f8d7da, #f5c6cb);
+  color: #721c24;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  border-left: 4px solid #dc3545;
+  font-weight: 500;
+}
+
+.success-message {
+  background: linear-gradient(135deg, #d4edda, #c3e6cb);
+  color: #155724;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  border-left: 4px solid #28a745;
+  font-weight: 500;
+}
+
+// Animaciones
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .modal-content {
+    padding: 24px;
+    width: 95%;
+  }
+  
+  .platillo-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    
+    .platillo-actions {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+  
+  .modal-actions {
+    flex-direction: column;
+    
+    button {
+      width: 100%;
+    }
+  }
+}
+
+// Estilos para modal de detalles
+.reserva-info {
+  margin-bottom: 24px;
+  padding: 20px;
+  background: linear-gradient(135deg, #e3f2fd, #f3e5f5);
+  border-radius: 12px;
+  border-left: 4px solid #2196f3;
+  
+  h4 {
+    color: #1976d2;
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    
+    i {
+      color: #2196f3;
+    }
+  }
+}
+
+.reserva-details {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  
+  .detail-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    
+    .label {
+      font-weight: 500;
+      color: #424242;
+    }
+    
+    .value {
+      color: #1976d2;
+      font-weight: 600;
+    }
+  }
+}
+
+.pedido-details {
+  margin-bottom: 24px;
+  
+  h4 {
+    color: #2c3e50;
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    
+    i {
+      color: #28a745;
+    }
+  }
+}
+
+.productos-list {
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.producto-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  border-bottom: 1px solid #f1f3f4;
+  transition: background-color 0.2s ease;
+  
+  &:last-child {
+    border-bottom: none;
+  }
+  
+  &:hover {
+    background: #f8f9fa;
+  }
+  
+  .producto-info {
+    flex: 1;
+    
+    .producto-nombre {
+      display: block;
+      font-weight: 600;
+      color: #2c3e50;
+      font-size: 1rem;
+      margin-bottom: 4px;
+    }
+    
+    .producto-categoria {
+      display: inline-block;
+      background: #e9ecef;
+      color: #6c757d;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 0.8rem;
+    }
+  }
+  
+  .producto-cantidad {
+    margin: 0 20px;
+    
+    .cantidad {
+      background: #007bff;
+      color: white;
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+  }
+  
+  .producto-precio {
+    text-align: right;
+    
+    .precio-unitario {
+      display: block;
+      color: #6c757d;
+      font-size: 0.85rem;
+      margin-bottom: 2px;
+    }
+    
+    .precio-total {
+      display: block;
+      color: #28a745;
+      font-weight: 600;
+      font-size: 1rem;
+    }
+  }
+}
+
+.no-productos {
+  text-align: center;
+  padding: 40px 20px;
+  color: #6c757d;
+  
+  i {
+    font-size: 3rem;
+    color: #dee2e6;
+    margin-bottom: 16px;
+  }
+  
+  p {
+    font-size: 1.1rem;
+    margin: 0;
+  }
+}
+
+.pedido-resumen {
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 24px;
+  
+  .resumen-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid #dee2e6;
+    
+    &:last-child {
+      border-bottom: none;
+    }
+    
+    &.total {
+      border-top: 2px solid #28a745;
+      margin-top: 12px;
+      padding-top: 16px;
+      
+      .label {
+        font-weight: 700;
+        font-size: 1.1rem;
+      }
+      
+      .value {
+        font-weight: 700;
+        font-size: 1.3rem;
+        color: #28a745;
+      }
+    }
+    
+    .label {
+      font-weight: 500;
+      color: #495057;
+    }
+    
+    .value {
+      color: #2c3e50;
+      font-weight: 600;
+    }
+  }
+}
+
+.status-badge {
+  padding: 4px 12px;
+  border-radius: 15px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  
+  &.estado-confirmada {
+    background: #d4edda;
+    color: #155724;
+  }
+  
+  &.estado-pendiente {
+    background: #fff3cd;
+    color: #856404;
+  }
+  
+  &.estado-cancelada {
+    background: #f8d7da;
+    color: #721c24;
+  }
+  
+  &.estado-completada {
+    background: #d1ecf1;
+    color: #0c5460;
+  }
+  
+  &.estado-desconocido {
+    background: #e2e3e5;
+    color: #383d41;
+  }
+  
+  &.estado-proceso {
+    background: #fff3cd;
+    color: #856404;
+  }
+  
+  &.estado-servido {
+    background: #d1ecf1;
+    color: #0c5460;
+  }
+  
+  &.estado-pagado {
+    background: #d4edda;
+    color: #155724;
+  }
+  
+  &.estado-cancelado {
+    background: #f8d7da;
+    color: #721c24;
+  }
+}

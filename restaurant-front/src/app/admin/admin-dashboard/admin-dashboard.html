@@ -1,0 +1,48 @@
+<div class="admin-dashboard">
+  <!-- Sidebar Navigation -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <h2>Restaurante</h2>
+      <p>Panel de Administrador</p>
+    </div>
+    
+    <nav class="sidebar-nav">
+      <a routerLink="mesas" routerLinkActive="active" class="nav-item">
+        <i class="fas fa-table"></i>
+        <span>Gestión de Mesas</span>
+      </a>
+      <a routerLink="platillos" routerLinkActive="active" class="nav-item">
+        <i class="fas fa-utensils"></i>
+        <span>Gestión de Platillos</span>
+      </a>
+      <a routerLink="reservas" routerLinkActive="active" class="nav-item">
+        <i class="fas fa-calendar-check"></i>
+        <span>Gestión de Reservas</span>
+      </a>
+      <a routerLink="usuarios" routerLinkActive="active" class="nav-item">
+        <i class="fas fa-users"></i>
+        <span>Gestión de Usuarios</span>
+      </a>
+    </nav>
+    
+    <div class="sidebar-footer">
+      <button class="btn-logout" (click)="logout()">
+        <i class="fas fa-sign-out-alt"></i>
+        <span>Cerrar Sesión</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Content Area -->
+  <main class="main-content">
+    <header class="content-header">
+      <div class="admin-info">
+        <span>Administrador: {{ currentUser?.nombre || 'Admin' }}</span>
+      </div>
+    </header>
+    
+    <div class="content-area">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+</div>

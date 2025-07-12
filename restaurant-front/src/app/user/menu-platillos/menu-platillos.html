@@ -1,0 +1,59 @@
+<div class="menu-platillos-container">
+  <div class="page-header">
+    <div class="restaurant-welcome">
+      <div class="restaurant-brand">
+        <div class="restaurant-logo">
+          <i class="fas fa-utensils"></i>
+        </div>
+        <div class="restaurant-info">
+          <h1>Warmi Sabor</h1>
+          <p class="restaurant-description">Comida ayacuchana tradicional hecha con cariño</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="page-content">
+      <h2>Nuestro Menú</h2>
+      <p>Descubre nuestros platillos disponibles</p>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="loading-container">
+    <i class="fas fa-spinner fa-spin"></i>
+    <p>Cargando menú...</p>
+  </div>
+
+  <!-- Error -->
+  <div *ngIf="error && !loading" class="error-container">
+    <i class="fas fa-exclamation-triangle"></i>
+    <p>{{ error }}</p>
+    <button class="btn-retry" (click)="cargarPlatillos()">
+      <i class="fas fa-redo"></i> Intentar de nuevo
+    </button>
+  </div>
+
+  <!-- Lista de platillos -->
+  <div class="platillos-grid" *ngIf="!loading && !error">
+    <div *ngIf="platillos.length === 0" class="empty-state">
+      <i class="fas fa-utensils"></i>
+      <h3>No hay platillos disponibles</h3>
+      <p>Vuelve más tarde para descubrir nuevas opciones.</p>
+    </div>
+    <div *ngFor="let platillo of platillos" class="platillo-card">
+      <div class="platillo-header">
+        <h2>{{ platillo.nombre }}</h2>
+        <span class="platillo-categoria">{{ platillo.categoria }}</span>
+      </div>
+      <div class="platillo-content">
+        <p class="platillo-descripcion">{{ platillo.descripcion || 'Sin descripción.' }}</p>
+      </div>
+      <div class="platillo-footer">
+        <span class="platillo-precio">S/ {{ platillo.precio | number:'1.2-2' }}</span>
+        <span class="platillo-disponible" *ngIf="platillo.disponible">
+          <i class="fas fa-check-circle"></i> Disponible
+        </span>
+      </div>
+    </div>
+  </div>
+</div>

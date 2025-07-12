@@ -1,0 +1,228 @@
+.historial-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.historial-section {
+  margin-bottom: 32px;
+}
+
+.historial-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 12px;
+  background: #F8EDE3; /* Crema Chacra */
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(217, 142, 4, 0.1);
+  animation: fadeIn 0.5s;
+}
+.historial-table th, .historial-table td {
+  padding: 12px 14px;
+  text-align: left;
+  border-bottom: 1px solid #e0e0e0;
+  font-size: 1em;
+}
+
+.historial-table td:last-child {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.historial-table th {
+  background: rgba(27, 154, 148, 0.1); /* Turquesa Andino con transparencia */
+  color: #1B9A94; /* Turquesa Andino */
+  font-weight: 600;
+}
+.historial-table tr:last-child td {
+  border-bottom: none;
+}
+
+.badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 0.95em;
+  font-weight: 600;
+  text-transform: capitalize;
+  letter-spacing: 0.5px;
+}
+.badge-cancelada {
+  background: rgba(177, 42, 42, 0.1); /* Rojo Huamanguino con transparencia */
+  color: #B12A2A; /* Rojo Huamanguino */
+}
+.badge-finalizada {
+  background: rgba(27, 154, 148, 0.1); /* Turquesa Andino con transparencia */
+  color: #1B9A94; /* Turquesa Andino */
+}
+.badge-confirmada {
+  background: rgba(217, 142, 4, 0.1); /* Mostaza Tierra con transparencia */
+  color: #D98E04; /* Mostaza Tierra */
+}
+.badge-en_proceso {
+  background: rgba(217, 142, 4, 0.1); /* Mostaza Tierra con transparencia */
+  color: #D98E04; /* Mostaza Tierra */
+}
+.badge-completado {
+  background: rgba(27, 154, 148, 0.1); /* Turquesa Andino con transparencia */
+  color: #1B9A94; /* Turquesa Andino */
+}
+.badge-pagado {
+  background: rgba(233, 93, 143, 0.1); /* Rosado Ñusta con transparencia */
+  color: #E95D8F; /* Rosado Ñusta */
+}
+.badge-servido {
+  background: rgba(177, 42, 42, 0.1); /* Rojo Huamanguino con transparencia */
+  color: #B12A2A; /* Rojo Huamanguino */
+}
+
+.btn-detalles {
+  background: #1B9A94; /* Turquesa Andino */
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 16px;
+  font-size: 0.98em;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: background 0.2s, box-shadow 0.2s;
+  box-shadow: 0 1px 2px rgba(27, 154, 148, 0.1);
+}
+.btn-detalles:hover {
+  background: #147A75; /* Turquesa Andino más oscuro */
+}
+
+.btn-cancelar {
+  background: #B12A2A; /* Rojo Huamanguino */
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 16px;
+  font-size: 0.98em;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: background 0.2s, box-shadow 0.2s;
+  box-shadow: 0 1px 2px rgba(177, 42, 42, 0.1);
+
+}
+.btn-cancelar:hover {
+  background: #8B1A1A; /* Rojo Huamanguino más oscuro */
+  box-shadow: 0 2px 4px rgba(177, 42, 42, 0.15);
+}
+
+.empty-message {
+  color: #4A2E1D; /* Café Quinua Negra */
+  text-align: center;
+  margin: 24px 0 12px 0;
+  font-size: 1.08em;
+}
+
+.loading-message {
+  color: #B12A2A; /* Rojo Huamanguino */
+  text-align: center;
+  margin: 18px 0;
+  font-size: 1.1em;
+}
+
+.modal {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s;
+}
+.modal-content {
+  background: #fff;
+  border-radius: 12px;
+  padding: 32px 28px;
+  min-width: 320px;
+  max-width: 95vw;
+  box-shadow: 0 8px 32px rgba(177, 42, 42, 0.15); /* Rojo Huamanguino con transparencia */
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  animation: slideDown 0.3s;
+}
+.modal-content h3 {
+  margin-top: 0;
+  color: #B12A2A; /* Rojo Huamanguino */
+  font-weight: 600;
+}
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 18px;
+}
+.btn-cerrar {
+  background: #4A2E1D; /* Café Quinua Negra */
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 7px 18px;
+  font-size: 1em;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.btn-cerrar:hover {
+  background: #2A1A0F; /* Café Quinua Negra más oscuro */
+}
+
+.cancelada-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  background: #fff3e0;
+  border: 1px solid #ffcc80;
+  border-radius: 8px;
+  padding: 10px 16px;
+  color: #e65100;
+  font-size: 1.05em;
+  font-weight: 500;
+  box-shadow: 0 1px 4px rgba(255, 193, 7, 0.08);
+}
+.cancelada-info i {
+  color: #d32f2f;
+  font-size: 1.2em;
+}
+.badge-cancelada-por {
+  margin-left: 6px;
+  padding: 4px 10px;
+  border-radius: 10px;
+  font-size: 0.97em;
+  font-weight: 600;
+  background: #ffe0b2;
+  color: #e65100;
+  border: 1px solid #ffcc80;
+}
+.badge-admin {
+  background: #e3eaf4;
+  color: #1976d2;
+  border: 1px solid #b0bec5;
+}
+.badge-usuario {
+  background: #ffeaea;
+  color: #d32f2f;
+  border: 1px solid #ffcdd2;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes slideDown {
+  from { transform: translateY(-30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+} 

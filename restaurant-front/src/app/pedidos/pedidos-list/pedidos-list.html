@@ -1,0 +1,81 @@
+<div class="list-container">
+  <h2>Listado de Pedidos</h2>
+  <app-spinner *ngIf="loading"></app-spinner>
+  <div *ngIf="error" class="error-message">{{ error }}</div>
+  
+  <!-- Estadísticas -->
+  <div *ngIf="!loading && !error" class="stats-container">
+    <div class="stat-item">
+      <span class="stat-label">Pedidos activos:</span>
+      <span class="stat-value">{{ pedidos.length }}</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-label">En proceso:</span>
+      <span class="stat-value">{{ getPedidosByEstado('en_proceso').length }}</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-label">Servidos:</span>
+      <span class="stat-value">{{ getPedidosByEstado('servido').length }}</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-label">Completados:</span>
+      <span class="stat-value">{{ getPedidosByEstado('completado').length }}</span>
+    </div>
+  </div>
+  
+  <!-- Lista de pedidos -->
+  <div *ngIf="!loading && !error" class="pedidos-container">
+    <div *ngIf="pedidos.length === 0" class="empty-message">
+      <i class="fas fa-utensils"></i>
+      <p>No hay pedidos activos</p>
+      <small>Los pedidos cancelados no se muestran en esta vista</small>
+    </div>
+    
+    <div *ngIf="pedidos.length > 0" class="pedidos-grid">
+      <div *ngFor="let pedido of pedidos" class="pedido-card" [class]="getEstadoClass(pedido.estado)">
+        <div class="pedido-header">
+          <div class="pedido-id">
+            <span class="id-number">#{{ pedido.id }}</span>
+          </div>
+          <div class="pedido-status" [class]="getEstadoClass(pedido.estado)">
+            <i class="fas fa-circle"></i>
+            <span>{{ getEstadoText(pedido.estado) }}</span>
+          </div>
+        </div>
+        
+        <div class="pedido-content">
+          <div class="pedido-info">
+            <div class="info-item" *ngIf="pedido.mesaNombre">
+              <i class="fas fa-table"></i>
+              <span><strong>Mesa:</strong> {{ pedido.mesaNombre }}</span>
+            </div>
+            <div class="info-item" *ngIf="pedido.reservaId">
+              <i class="fas fa-calendar"></i>
+              <span><strong>Reserva:</strong> #{{ pedido.reservaId }}</span>
+            </div>
+            <div class="info-item" *ngIf="pedido.usuarioNombre">
+              <i class="fas fa-user"></i>
+              <span><strong>Cliente:</strong> {{ pedido.usuarioNombre }}</span>
+            </div>
+            <div class="info-item">
+              <i class="fas fa-dollar-sign"></i>
+              <span><strong>Total:</strong> S/ {{ pedido.total | number:'1.2-2' }}</span>
+            </div>
+            <div class="info-item" *ngIf="pedido.fechaCreacion">
+              <i class="fas fa-calendar-plus"></i>
+              <span><strong>Creado:</strong> {{ pedido.fechaCreacion | date:'short' }}</span>
+            </div>
+            <div class="info-item" *ngIf="pedido.fechaCierre">
+              <i class="fas fa-calendar-check"></i>
+              <span><strong>Cerrado:</strong> {{ pedido.fechaCierre | date:'short' }}</span>
+            </div>
+            <div class="info-item" *ngIf="pedido.canceladoPorReserva">
+              <i class="fas fa-exclamation-triangle"></i>
+              <span class="warning-text"><strong>Cancelado por reserva</strong></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

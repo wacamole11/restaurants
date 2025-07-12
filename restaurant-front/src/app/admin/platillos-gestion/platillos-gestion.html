@@ -1,0 +1,140 @@
+<div class="platillos-gestion-container">
+  <h2>Gestión de Platillos</h2>
+
+  <!-- Banner de alerta -->
+  <div *ngIf="showAlert" [attr.role]="alertType === 'error' ? 'alert' : 'status'" tabindex="0" class="alert-banner" [ngClass]="alertType">
+    <span>{{ alertMessage }}</span>
+    <button class="close-alert" (click)="showAlert = false" aria-label="Cerrar alerta">&times;</button>
+  </div>
+
+  <!-- Filtros y búsqueda -->
+  <div class="filtros-bar">
+    <input type="text" placeholder="Buscar por nombre o descripción..." [(ngModel)]="searchTerm" />
+    <select [(ngModel)]="filtroCategoria">
+      <option value="todos">Todas las categorías</option>
+      <option *ngFor="let cat of categorias" [value]="cat">{{ cat }}</option>
+    </select>
+    <select [(ngModel)]="filtroDisponibilidad">
+      <option value="todos">Todos</option>
+      <option value="disponible">Disponibles</option>
+      <option value="no-disponible">No disponibles</option>
+    </select>
+  </div>
+
+  <!-- Estadísticas -->
+  <div class="stats">
+    <span>Total: {{ getTotalPlatillos() }}</span>
+    <span>Disponibles: {{ getDisponibles() }}</span>
+    <span>No disponibles: {{ getNoDisponibles() }}</span>
+  </div>
+
+  <!-- Botón crear -->
+  <button class="btn btn-primary" (click)="openCreateModal()">+ Nuevo Platillo</button>
+
+  <!-- Indicador de carga -->
+  <app-spinner *ngIf="loading"></app-spinner>
+  <!-- Error -->
+  <div *ngIf="error" class="error-message">{{ error }}</div>
+
+  <!-- Listado de platillos -->
+  <div class="platillos-list" *ngIf="!loading && !error">
+    <div *ngIf="platillosFiltrados.length === 0" class="no-data">
+      <i class="fas fa-utensils"></i>
+      <h3>No hay platillos que coincidan con la búsqueda</h3>
+      <p>Intenta ajustar los filtros o crear un nuevo platillo</p>
+    </div>
+    
+    <div *ngIf="platillosFiltrados.length > 0" class="platillos-grid">
+      <div *ngFor="let platillo of platillosFiltrados" class="platillo-card">
+        <div class="platillo-info" (click)="viewPlatillo(platillo)">
+          <strong>{{ platillo.nombre }}</strong>
+          <span class="categoria">{{ platillo.categoria }}</span>
+          <span class="precio">{{ platillo.precio | currency:'USD' }}</span>
+          <span *ngIf="platillo.descripcion" class="descripcion">{{ platillo.descripcion }}</span>
+          <span [class.disponible]="platillo.disponible" [class.no-disponible]="!platillo.disponible">
+            {{ platillo.disponible ? 'Disponible' : 'No disponible' }}
+          </span>
+        </div>
+        <div class="platillo-actions">
+          <button class="btn btn-sm btn-info" (click)="editPlatillo(platillo); $event.stopPropagation()" title="Editar platillo">
+            <i class="fas fa-edit"></i>
+            Editar
+          </button>
+          <button class="btn btn-sm btn-danger" (click)="deletePlatillo(platillo.id!); $event.stopPropagation()" title="Eliminar platillo">
+            <i class="fas fa-trash"></i>
+            Eliminar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Crear/Editar Platillo -->
+  <div class="modal" *ngIf="showModal" role="dialog" aria-modal="true" aria-labelledby="modalPlatilloTitle">
+    <div class="modal-content">
+      <h3 id="modalPlatilloTitle">{{ editingPlatillo ? 'Editar Platillo' : 'Nuevo Platillo' }}</h3>
+      <form (ngSubmit)="savePlatillo()" #platilloForm="ngForm">
+        <label>Nombre:
+          <input type="text" [(ngModel)]="formPlatillo.nombre" name="nombre" required />
+        </label>
+        <label>Descripción:
+          <textarea [(ngModel)]="formPlatillo.descripcion" name="descripcion"></textarea>
+        </label>
+        <label>Precio:
+          <input type="number" [(ngModel)]="formPlatillo.precio" name="precio" required min="0" />
+        </label>
+        <label>Categoría:
+          <select [(ngModel)]="formPlatillo.categoria" name="categoria" required>
+            <option value="" disabled>Selecciona una categoría</option>
+            <option *ngFor="let cat of categorias" [value]="cat">{{ cat }}</option>
+          </select>
+        </label>
+        <label>
+          <input type="checkbox" [(ngModel)]="formPlatillo.disponible" name="disponible" /> Disponible
+        </label>
+        <!-- Imagen opcional -->
+        <!-- <label>Imagen:
+          <input type="text" [(ngModel)]="formPlatillo.imagen" name="imagen" placeholder="URL de la imagen" />
+        </label> -->
+        <div class="modal-actions">
+          <button type="submit" class="btn btn-success" [disabled]="saving || !platilloForm.form.valid">{{ saving ? 'Guardando...' : 'Guardar' }}</button>
+          <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Detalles Platillo -->
+  <div class="modal" *ngIf="showDetailsModal" role="dialog" aria-modal="true" aria-labelledby="modalDetallesTitle">
+    <div class="modal-content">
+      <h3 id="modalDetallesTitle">Detalles del Platillo</h3>
+      <div *ngIf="detailsPlatillo">
+        <p><strong>Nombre:</strong> {{ detailsPlatillo.nombre }}</p>
+        <p><strong>Descripción:</strong> {{ detailsPlatillo.descripcion || 'Sin descripción' }}</p>
+        <p><strong>Precio:</strong> {{ detailsPlatillo.precio | currency:'USD' }}</p>
+        <p><strong>Categoría:</strong> {{ detailsPlatillo.categoria }}</p>
+        <p><strong>Disponible:</strong> 
+          <span [class.disponible]="detailsPlatillo.disponible" [class.no-disponible]="!detailsPlatillo.disponible">
+            {{ detailsPlatillo.disponible ? 'Sí' : 'No' }}
+          </span>
+        </p>
+        <!-- <p *ngIf="detailsPlatillo.imagen"><img [src]="detailsPlatillo.imagen" alt="Imagen del platillo" /></p> -->
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary" (click)="closeDetailsModal()">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de confirmación de eliminación -->
+  <div class="modal" *ngIf="showDeleteModal" role="dialog" aria-modal="true" aria-labelledby="modalDeleteTitle">
+    <div class="modal-content">
+      <h3 id="modalDeleteTitle">¿Eliminar platillo?</h3>
+      <p>¿Estás seguro de que deseas eliminar el platillo <strong>{{ platilloAEliminar?.nombre }}</strong>? Esta acción no se puede deshacer.</p>
+      <div class="modal-actions">
+        <button id="btn-confirm-delete-platillo" class="btn btn-danger" (click)="confirmDeletePlatillo()">Sí, eliminar</button>
+        <button class="btn btn-secondary" (click)="closeDeleteModal()">Cancelar</button>
+      </div>
+    </div>
+  </div>
+</div>

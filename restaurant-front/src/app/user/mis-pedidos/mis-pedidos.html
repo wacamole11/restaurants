@@ -1,0 +1,285 @@
+<div class="mis-pedidos-container">
+  <div class="page-header">
+    <div class="restaurant-welcome">
+      <div class="restaurant-brand">
+        <div class="restaurant-logo">
+          <i class="fas fa-utensils"></i>
+        </div>
+        <div class="restaurant-info">
+          <h1>Warmi Sabor</h1>
+          <p class="restaurant-description">Comida ayacuchana tradicional hecha con cariño</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="page-content">
+      <h2>Mis Pedidos</h2>
+      <p>Revisa el estado de todos tus pedidos</p>
+      <div class="user-info" *ngIf="usuarioActual">
+        <i class="fas fa-user"></i>
+        <span>Usuario: {{ usuarioActual.nombre }} ({{ usuarioActual.email }})</span>
+      </div>
+      <button class="btn-primary" (click)="openCreateModal()">
+        <i class="fas fa-plus"></i> Nuevo Pedido
+      </button>
+    </div>
+  </div>
+
+  <!-- Indicador de carga -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="loading-spinner">
+      <i class="fas fa-spinner fa-spin"></i>
+      <p>Cargando tus pedidos...</p>
+    </div>
+  </div>
+
+  <!-- Error -->
+  <div *ngIf="error && !loading" class="error-container">
+    <div class="error-card">
+      <i class="fas fa-exclamation-triangle"></i>
+      <h3>Error al cargar pedidos</h3>
+      <p>{{ error }}</p>
+      <button class="btn-retry" (click)="cargarMisPedidos()">
+        <i class="fas fa-redo"></i>
+        Intentar de nuevo
+      </button>
+    </div>
+  </div>
+
+  <!-- Listado de pedidos -->
+  <div class="pedidos-content" *ngIf="!loading && !error">
+    <!-- Sin pedidos -->
+    <div *ngIf="misPedidos.length === 0" class="empty-state">
+      <div class="empty-card">
+        <i class="fas fa-utensils"></i>
+        <h3>No tienes pedidos</h3>
+        <p>Aún no has realizado ningún pedido. ¡Haz tu primer pedido desde tus reservas!</p>
+        <button class="btn-primary" routerLink="/user/reservas">
+          <i class="fas fa-calendar"></i>
+          Ver Mis Reservas
+        </button>
+      </div>
+    </div>
+
+    <!-- Con pedidos -->
+    <div *ngIf="misPedidos.length > 0" class="pedidos-grid">
+      <div *ngFor="let pedido of misPedidos" class="pedido-card">
+        <div class="pedido-header">
+          <div class="pedido-id">
+            <span class="id-number">#{{ pedido.id }}</span>
+          </div>
+          <div class="pedido-status" [class]="getEstadoClass(pedido.estado)">
+            <i class="fas fa-circle"></i>
+            <span>{{ getEstadoText(pedido.estado) }}</span>
+          </div>
+        </div>
+        
+        <div class="pedido-content">
+          <div class="pedido-info">
+            <div class="info-item" *ngIf="pedido.mesaNombre">
+              <i class="fas fa-table"></i>
+              <span><strong>Mesa:</strong> {{ pedido.mesaNombre }}</span>
+            </div>
+            <div class="info-item">
+              <i class="fas fa-dollar-sign"></i>
+              <span><strong>Total:</strong> S/ {{ pedido.total | number:'1.2-2' }}</span>
+            </div>
+            <div class="info-item" *ngIf="pedido.fechaCreacion">
+              <i class="fas fa-calendar-plus"></i>
+              <span><strong>Creado:</strong> {{ pedido.fechaCreacion | date:'short' }}</span>
+            </div>
+            <div class="info-item" *ngIf="pedido.fechaCierre">
+              <i class="fas fa-calendar-check"></i>
+              <span><strong>Completado:</strong> {{ pedido.fechaCierre | date:'short' }}</span>
+            </div>
+            <div class="info-item" *ngIf="pedido.horaEntregaProgramada">
+              <i class="fas fa-clock"></i>
+              <span><strong>Entrega programada:</strong> {{ pedido.horaEntregaProgramada | date:'short' }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="pedido-actions">
+          <button class="btn-secondary" title="Ver detalles" (click)="openDetailsModal(pedido)">
+            <i class="fas fa-eye"></i>
+            <span>Ver Detalles</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para ver detalles del pedido -->
+<div class="modal" *ngIf="showDetailsModal">
+  <div class="modal-content">
+    <h3>Detalles del Pedido #{{ pedidoSeleccionado?.id }}</h3>
+    
+    <!-- Información de la reserva asociada -->
+    <div *ngIf="pedidoSeleccionado?.reservaId" class="reserva-info">
+      <h4><i class="fas fa-calendar-alt"></i> Reserva Asociada</h4>
+      <div class="reserva-details">
+        <div class="detail-item">
+          <span class="label">ID de Reserva:</span>
+          <span class="value">#{{ pedidoSeleccionado?.reservaId }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="label">Mesa:</span>
+          <span class="value">{{ pedidoSeleccionado?.reservaMesaNombre || 'Mesa ' + pedidoSeleccionado?.mesaNombre }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="label">Fecha:</span>
+          <span class="value">{{ pedidoSeleccionado?.fechaReserva | date:'fullDate' }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="label">Hora:</span>
+          <span class="value">{{ pedidoSeleccionado?.fechaReserva | date:'shortTime' }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="label">Personas:</span>
+          <span class="value">{{ pedidoSeleccionado?.numPersonas }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="label">Estado:</span>
+          <span class="value status-badge" [class]="getReservaEstadoClass(pedidoSeleccionado?.estadoReserva || '')">
+            {{ getReservaEstadoText(pedidoSeleccionado?.estadoReserva || '') }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Información del pedido -->
+    <div class="pedido-details">
+      <h4><i class="fas fa-utensils"></i> Productos del Pedido</h4>
+      
+      <div *ngIf="pedidoSeleccionado?.detalles && (pedidoSeleccionado?.detalles?.length || 0) > 0" class="productos-list">
+        <div *ngFor="let detalle of pedidoSeleccionado?.detalles" class="producto-item">
+          <div class="producto-info">
+            <span class="producto-nombre">{{ detalle.platilloNombre }}</span>
+            <span class="producto-categoria">{{ detalle.platilloCategoria }}</span>
+          </div>
+          <div class="producto-cantidad">
+            <span class="cantidad">x{{ detalle.cantidad }}</span>
+          </div>
+          <div class="producto-precio">
+                    <span class="precio-unitario">S/ {{ detalle.precioUnitario | number:'1.2-2' }} c/u</span>
+        <span class="precio-total">S/ {{ (detalle.precioUnitario * detalle.cantidad) | number:'1.2-2' }}</span>
+          </div>
+        </div>
+      </div>
+      
+      <div *ngIf="!pedidoSeleccionado?.detalles || pedidoSeleccionado?.detalles?.length === 0" class="no-productos">
+        <i class="fas fa-exclamation-circle"></i>
+        <p>No hay productos en este pedido</p>
+      </div>
+    </div>
+
+    <!-- Resumen del pedido -->
+    <div class="pedido-resumen">
+      <div class="resumen-item">
+        <span class="label">Estado del Pedido:</span>
+        <span class="value status-badge" [class]="getEstadoClass(pedidoSeleccionado?.estado || '')">
+          {{ getEstadoText(pedidoSeleccionado?.estado || '') }}
+        </span>
+      </div>
+      <div class="resumen-item">
+        <span class="label">Fecha de Creación:</span>
+        <span class="value">{{ pedidoSeleccionado?.fechaCreacion | date:'fullDate' }} {{ pedidoSeleccionado?.fechaCreacion | date:'shortTime' }}</span>
+      </div>
+      <div class="resumen-item" *ngIf="pedidoSeleccionado?.fechaCierre">
+        <span class="label">Fecha de Cierre:</span>
+        <span class="value">{{ pedidoSeleccionado?.fechaCierre | date:'fullDate' }} {{ pedidoSeleccionado?.fechaCierre | date:'shortTime' }}</span>
+      </div>
+      <div class="resumen-item" *ngIf="pedidoSeleccionado?.horaEntregaProgramada">
+        <span class="label">Hora de Entrega Programada:</span>
+        <span class="value">{{ pedidoSeleccionado?.horaEntregaProgramada | date:'fullDate' }} {{ pedidoSeleccionado?.horaEntregaProgramada | date:'shortTime' }}</span>
+      </div>
+      <div class="resumen-item total">
+        <span class="label">Total del Pedido:</span>
+        <span class="value">S/ {{ pedidoSeleccionado?.total | number:'1.2-2' }}</span>
+      </div>
+    </div>
+    
+    <div class="modal-actions">
+      <button *ngIf="pedidoSeleccionado?.estado !== 'cancelado' && pedidoSeleccionado?.estado !== 'completado' && pedidoSeleccionado?.estadoReserva?.toLowerCase() !== 'cancelada'" 
+              class="btn-danger" 
+              (click)="cancelarPedido()" 
+              [disabled]="cancelando">
+        <i class="fas fa-times"></i>
+        {{ cancelando ? 'Cancelando...' : 'Cancelar Pedido' }}
+      </button>
+      <button class="btn-secondary" (click)="closeDetailsModal()">
+        Cerrar
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para crear nuevo pedido -->
+<div class="modal" *ngIf="showCreateModal">
+  <div class="modal-content">
+    <h3>Crear Nuevo Pedido</h3>
+    <div *ngIf="createError" class="error-message">{{ createError }}</div>
+    <div *ngIf="createSuccess" class="success-message">{{ createSuccess }}</div>
+    
+    <div class="form-group">
+      <label>Seleccionar Reserva:</label>
+      <select [(ngModel)]="reservaSeleccionada" (change)="pedidoPlatillos = []">
+        <option [ngValue]="null">Selecciona una reserva</option>
+        <option *ngFor="let reserva of reservasDisponibles" [ngValue]="reserva">
+          Mesa {{ reserva.mesaNombre }} - {{ reserva.fechaReserva | date:'short' }}
+        </option>
+      </select>
+      <div *ngIf="reservasDisponibles.length === 0" class="no-reservas-message">
+        <i class="fas fa-info-circle"></i>
+        <p>No tienes reservas confirmadas disponibles para crear pedidos.</p>
+        <p>Las reservas canceladas no pueden tener pedidos asociados.</p>
+      </div>
+    </div>
+
+    <div *ngIf="reservaSeleccionada" class="platillos-section">
+      <h4>Seleccionar Platillos</h4>
+      <div class="platillos-list">
+        <div *ngFor="let platillo of platillosDisponibles" class="platillo-item">
+          <div class="platillo-info">
+            <span class="platillo-nombre">{{ platillo.nombre }}</span>
+            <span class="platillo-precio">S/ {{ platillo.precio | number:'1.2-2' }}</span>
+            <span class="platillo-categoria">{{ platillo.categoria }}</span>
+          </div>
+          <div class="platillo-actions">
+            <button *ngIf="!platilloEnPedido(platillo)" 
+                    (click)="agregarPlatillo(platillo)" 
+                    class="btn-add">
+              <i class="fas fa-plus"></i>
+            </button>
+            <div *ngIf="platilloEnPedido(platillo)" class="cantidad-controls">
+              <button (click)="cambiarCantidad(platillo, obtenerCantidad(platillo) - 1)">-</button>
+              <input type="number" min="1" 
+                     [value]="obtenerCantidad(platillo)" 
+                     (input)="onCantidadChange(platillo, $event)" />
+              <button (click)="cambiarCantidad(platillo, obtenerCantidad(platillo) + 1)">+</button>
+              <button (click)="quitarPlatillo(platillo)" class="btn-remove">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div *ngIf="pedidoPlatillos.length > 0" class="pedido-total">
+        <span>Total: S/ {{ calcularTotal() | number:'1.2-2' }}</span>
+      </div>
+    </div>
+    
+    <div class="modal-actions">
+      <button class="btn-primary" 
+              (click)="crearPedido()" 
+              [disabled]="!reservaSeleccionada || pedidoPlatillos.length === 0 || creating">
+        {{ creating ? 'Creando...' : 'Crear Pedido' }}
+      </button>
+      <button class="btn-secondary" (click)="closeCreateModal()" [disabled]="creating">
+        Cancelar
+      </button>
+    </div>
+  </div>
+</div>

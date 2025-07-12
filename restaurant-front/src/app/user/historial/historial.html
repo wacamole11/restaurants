@@ -1,0 +1,140 @@
+<div class="historial-container">
+  <h2>Historial de Reservas y Pedidos</h2>
+  <div *ngIf="loading" class="loading-message"><i class="fas fa-spinner fa-spin"></i> Cargando historial...</div>
+  <div *ngIf="error" class="error-message">{{ error }}</div>
+
+  <div class="historial-section">
+    <h3><i class="fas fa-calendar-times"></i> Reservas Canceladas y Finalizadas</h3>
+    <div *ngIf="reservasHistorial.length === 0" class="empty-message">No hay reservas canceladas o finalizadas.</div>
+    <table *ngIf="reservasHistorial.length > 0" class="historial-table">
+      <thead>
+        <tr>
+          <th>Mesa</th>
+          <th>Fecha</th>
+          <th>Personas</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let reserva of reservasHistorial">
+          <td>{{ reserva.mesaNombre }}</td>
+          <td>{{ reserva.fechaReserva | date:'short' }}</td>
+          <td>{{ reserva.numPersonas }}</td>
+          <td>
+            <span [class]="'badge badge-' + reserva.estado.toLowerCase()">{{ reserva.estado }}</span>
+          </td>
+          <td>
+            <button class="btn-detalles" (click)="abrirDetallesReserva(reserva)">
+              <i class="fas fa-eye"></i> Detalles
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="historial-section">
+    <h3><i class="fas fa-receipt"></i> Pedidos</h3>
+    <div *ngIf="pedidosHistorial.length === 0" class="empty-message">No hay pedidos en el historial.</div>
+    <table *ngIf="pedidosHistorial.length > 0" class="historial-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Reserva</th>
+          <th>Total</th>
+          <th>Estado</th>
+          <th>Fecha</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let pedido of pedidosHistorial">
+          <td>#{{ pedido.id }}</td>
+          <td *ngIf="pedido.reservaId">#{{ pedido.reservaId }}</td>
+          <td *ngIf="!pedido.reservaId">-</td>
+          <td>S/ {{ pedido.total | number:'1.2-2' }}</td>
+          <td>
+            <span [class]="'badge badge-' + pedido.estado.toLowerCase()">{{ pedido.estado }}</span>
+          </td>
+          <td>
+            <button class="btn-detalles" (click)="abrirDetallesPedido(pedido)">
+              <i class="fas fa-eye"></i> Detalles
+            </button>
+            <button *ngIf="pedido.estado !== 'cancelado' && pedido.estado !== 'completado' && pedido.estadoReserva?.toLowerCase() !== 'cancelada'" 
+                    class="btn-cancelar" 
+                    (click)="cancelarPedido(pedido)"
+                    title="Cancelar pedido">
+              <i class="fas fa-times"></i> Cancelar
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Modal Detalles Reserva -->
+  <div class="modal" *ngIf="showReservaModal">
+    <div class="modal-content">
+      <h3>Detalles de la Reserva</h3>
+      <div *ngIf="reservaSeleccionada">
+        <p><strong>Mesa:</strong> {{ reservaSeleccionada.mesaNombre }}</p>
+        <p><strong>Fecha:</strong> {{ reservaSeleccionada.fechaReserva | date:'full' }}</p>
+        <p><strong>Personas:</strong> {{ reservaSeleccionada.numPersonas }}</p>
+        <p><strong>Estado:</strong> <span [class]="'badge badge-' + reservaSeleccionada.estado.toLowerCase()">{{ reservaSeleccionada.estado }}</span></p>
+        <p><strong>Creada:</strong> {{ reservaSeleccionada.fechaCreacion | date:'short' }}</p>
+        <ng-container *ngIf="reservaSeleccionada.estado === 'CANCELADA'">
+          <div class="cancelada-info">
+            <i class="fas fa-user-slash"></i>
+            Cancelada por:
+            <span class="badge badge-cancelada-por" [ngClass]="{
+              'badge-admin': reservaSeleccionada.canceladaPor === 'ADMIN',
+              'badge-usuario': reservaSeleccionada.canceladaPor === 'USUARIO'
+            }">
+              {{ reservaSeleccionada.canceladaPor === 'ADMIN' ? 'Administrador' : 'Usuario' }}
+            </span>
+          </div>
+        </ng-container>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-cerrar" (click)="cerrarDetallesReserva()">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Detalles Pedido -->
+  <div class="modal" *ngIf="showPedidoModal">
+    <div class="modal-content">
+      <h3>Detalles del Pedido</h3>
+      <div *ngIf="pedidoSeleccionado">
+        <p><strong>ID:</strong> #{{ pedidoSeleccionado.id }}</p>
+        <p><strong>Reserva:</strong> <span *ngIf="pedidoSeleccionado.reservaId">#{{ pedidoSeleccionado.reservaId }}</span><span *ngIf="!pedidoSeleccionado.reservaId">-</span></p>
+        <p><strong>Total:</strong> S/ {{ pedidoSeleccionado.total | number:'1.2-2' }}</p>
+        <p><strong>Estado:</strong> <span [class]="'badge badge-' + pedidoSeleccionado.estado.toLowerCase()">{{ pedidoSeleccionado.estado }}</span></p>
+        <ng-container *ngIf="pedidoSeleccionado.canceladoPorReserva">
+          <div class="cancelada-info">
+            <i class="fas fa-link-slash"></i>
+            Este pedido fue cancelado automáticamente porque la reserva asociada fue cancelada.
+          </div>
+        </ng-container>
+        <p><strong>Fecha de Creación:</strong> {{ pedidoSeleccionado.fechaCreacion | date:'full' }}</p>
+        <div *ngIf="pedidoSeleccionado.detalles && pedidoSeleccionado.detalles.length > 0">
+          <h4>Productos:</h4>
+          <ul>
+            <li *ngFor="let d of pedidoSeleccionado.detalles">
+              {{ d.platilloNombre }} <span *ngIf="d.cantidad">x{{ d.cantidad }}</span> <span *ngIf="d.precioUnitario">(S/ {{ d.precioUnitario | number:'1.2-2' }})</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button *ngIf="pedidoSeleccionado && pedidoSeleccionado.estado !== 'cancelado' && pedidoSeleccionado.estado !== 'completado' && pedidoSeleccionado.estadoReserva?.toLowerCase() !== 'cancelada'" 
+                class="btn-cancelar" 
+                (click)="cancelarPedido(pedidoSeleccionado)">
+          <i class="fas fa-times"></i> Cancelar Pedido
+        </button>
+        <button class="btn-cerrar" (click)="cerrarDetallesPedido()">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div> 

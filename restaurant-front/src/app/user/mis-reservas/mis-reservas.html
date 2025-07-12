@@ -1,0 +1,200 @@
+<div class="mis-reservas-container">
+  <div class="page-header">
+    <div class="restaurant-welcome">
+      <div class="restaurant-brand">
+        <div class="restaurant-logo">
+          <i class="fas fa-utensils"></i>
+        </div>
+        <div class="restaurant-info">
+          <h1>Warmi Sabor</h1>
+          <p class="restaurant-description">Comida ayacuchana tradicional hecha con cariño</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="page-content">
+      <h2>Mis Reservas</h2>
+      <p>Gestiona y revisa todas tus reservas</p>
+      <div class="user-info" *ngIf="usuarioActual">
+        <i class="fas fa-user"></i>
+        <span>Usuario: {{ usuarioActual.nombre }} ({{ usuarioActual.email }})</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Indicador de carga -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="loading-spinner">
+      <i class="fas fa-spinner fa-spin"></i>
+      <p>Cargando tus reservas...</p>
+    </div>
+  </div>
+
+  <!-- Error -->
+  <div *ngIf="error && !loading" class="error-container">
+    <div class="error-card">
+      <i class="fas fa-exclamation-triangle"></i>
+      <h3>Error al cargar reservas</h3>
+      <p>{{ error }}</p>
+      <button class="btn-retry" (click)="cargarMisReservas()">
+        <i class="fas fa-redo"></i>
+        Intentar de nuevo
+      </button>
+    </div>
+  </div>
+
+  <!-- Listado de reservas -->
+  <div class="reservas-content" *ngIf="!loading && !error">
+    <!-- Sin reservas -->
+    <div *ngIf="misReservas.length === 0" class="empty-state">
+      <div class="empty-card">
+        <i class="fas fa-calendar-times"></i>
+        <h3>No tienes reservas</h3>
+        <p>Aún no has realizado ninguna reserva. ¡Haz tu primera reserva ahora!</p>
+        <button class="btn-primary" routerLink="/user/mesas-disponibles">
+          <i class="fas fa-plus"></i>
+          Hacer Reserva
+        </button>
+      </div>
+    </div>
+
+    <!-- Con reservas -->
+    <div *ngIf="misReservas.length > 0" class="reservas-grid">
+      <div *ngFor="let reserva of misReservas" class="reserva-card">
+        <div class="reserva-header">
+          <div class="reserva-id">
+            <span class="id-number">#{{ reserva.id }}</span>
+          </div>
+          <div class="reserva-status" [class]="getEstadoClass(reserva.estado)">
+            <i class="fas fa-circle"></i>
+            <span>{{ getEstadoText(reserva.estado) }}</span>
+          </div>
+        </div>
+        
+        <div class="reserva-content">
+          <div class="reserva-info">
+            <div class="info-item">
+              <i class="fas fa-table"></i>
+              <span><strong>Mesa:</strong> {{ reserva.mesaNombre }}</span>
+            </div>
+            <div class="info-item">
+              <i class="fas fa-calendar-alt"></i>
+              <span><strong>Fecha:</strong> {{ reserva.fechaReserva | date:'fullDate' }}</span>
+            </div>
+            <div class="info-item">
+              <i class="fas fa-clock"></i>
+              <span><strong>Hora:</strong> {{ reserva.fechaReserva | date:'shortTime' }}</span>
+            </div>
+            <div class="info-item">
+              <i class="fas fa-users"></i>
+              <span><strong>Personas:</strong> {{ reserva.numPersonas }}</span>
+            </div>
+            <div class="info-item">
+              <i class="fas fa-calendar-plus"></i>
+              <span><strong>Creada:</strong> {{ reserva.fechaCreacion | date:'short' }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="reserva-actions">
+          <button class="btn-secondary" title="Ver detalles" (click)="openDetailsModal(reserva)">
+            <i class="fas fa-eye"></i>
+            <span>Ver</span>
+          </button>
+          <button class="btn-danger" title="Cancelar reserva" 
+                  [disabled]="reserva.estado === 'CANCELADA'"
+                  (click)="cancelarReserva(reserva)">
+            <i class="fas fa-times"></i>
+            <span>Cancelar</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para ver detalles de la reserva -->
+<div class="modal" *ngIf="showDetailsModal">
+  <div class="modal-content">
+    <h3>Detalles de la Reserva #{{ reservaSeleccionada?.id }}</h3>
+    
+    <!-- Información de la reserva -->
+    <div class="reserva-info">
+      <h4><i class="fas fa-calendar-alt"></i> Información de la Reserva</h4>
+      <div class="reserva-details">
+        <div class="detail-item">
+          <span class="label">Mesa:</span>
+          <span class="value">{{ reservaSeleccionada?.mesaNombre }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="label">Fecha:</span>
+          <span class="value">{{ reservaSeleccionada?.fechaReserva | date:'fullDate' }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="label">Hora:</span>
+          <span class="value">{{ reservaSeleccionada?.fechaReserva | date:'shortTime' }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="label">Personas:</span>
+          <span class="value">{{ reservaSeleccionada?.numPersonas }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="label">Estado:</span>
+          <span class="value status-badge" [class]="getEstadoClass(reservaSeleccionada?.estado || '')">
+            {{ getEstadoText(reservaSeleccionada?.estado || '') }}
+          </span>
+        </div>
+        <div class="detail-item">
+          <span class="label">Fecha de Creación:</span>
+          <span class="value">{{ reservaSeleccionada?.fechaCreacion | date:'fullDate' }} {{ reservaSeleccionada?.fechaCreacion | date:'shortTime' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pedidos asociados -->
+    <div class="pedidos-section">
+      <h4><i class="fas fa-utensils"></i> Pedidos Asociados</h4>
+      
+      <div *ngIf="pedidosAsociados && pedidosAsociados.length > 0" class="pedidos-list">
+        <div *ngFor="let pedido of pedidosAsociados" class="pedido-item">
+          <div class="pedido-header">
+            <span class="pedido-id">Pedido #{{ pedido.id }}</span>
+            <span class="pedido-status status-badge" [class]="getPedidoEstadoClass(pedido.estado)">
+              {{ getPedidoEstadoText(pedido.estado) }}
+            </span>
+          </div>
+          <div class="pedido-details">
+            <div class="pedido-info">
+              <span class="total">Total: S/ {{ pedido.total | number:'1.2-2' }}</span>
+              <span class="fecha">{{ pedido.fechaCreacion | date:'short' }}</span>
+            </div>
+            <div class="pedido-productos" *ngIf="pedido.detalles && pedido.detalles.length > 0">
+              <div *ngFor="let detalle of pedido.detalles" class="producto-item">
+                <span class="producto-nombre">{{ detalle.platilloNombre }}</span>
+                <span class="producto-cantidad">x{{ detalle.cantidad }}</span>
+                <span class="producto-precio">S/ {{ (detalle.precioUnitario * detalle.cantidad) | number:'1.2-2' }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div *ngIf="!pedidosAsociados || pedidosAsociados.length === 0" class="no-pedidos">
+        <i class="fas fa-info-circle"></i>
+        <p>No hay pedidos asociados a esta reserva</p>
+        <button class="btn-primary" routerLink="/user/pedidos" (click)="closeDetailsModal()">
+          <i class="fas fa-plus"></i>
+          Crear Pedido
+        </button>
+      </div>
+    </div>
+    
+    <div class="modal-actions">
+      <button class="btn-secondary" (click)="closeDetailsModal()">
+        Cerrar
+      </button>
+    </div>
+  </div>
+</div>
+
+

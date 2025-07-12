@@ -1,0 +1,107 @@
+<div class="mesas-disponibles">
+  <div class="page-header">
+    <div class="restaurant-welcome">
+      <div class="restaurant-brand">
+        <div class="restaurant-logo">
+          <i class="fas fa-utensils"></i>
+        </div>
+        <div class="restaurant-info">
+          <h1>Warmi Sabor</h1>
+          <p class="restaurant-description">Comida ayacuchana tradicional hecha con cariño</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="page-content">
+      <h2>Mesas Disponibles</h2>
+      <p>Selecciona una mesa para hacer tu reserva</p>
+      <div class="user-info" *ngIf="usuarioActual">
+        <i class="fas fa-user"></i>
+        <span>Usuario: {{ usuarioActual.nombre }} ({{ usuarioActual.email }})</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="mesas-grid">
+    <div *ngFor="let mesa of mesasDisponibles" class="mesa-card disponible">
+      <div class="mesa-header">
+        <div class="mesa-number">
+          <span class="number">{{ mesa.numeroMesa }}</span>
+        </div>
+        <div class="mesa-status disponible">
+          <i class="fas fa-check-circle"></i>
+          <span>Disponible</span>
+        </div>
+      </div>
+      
+      <div class="mesa-content">
+        <div class="mesa-info">
+          <div class="info-item">
+            <i class="fas fa-users"></i>
+            <span>Capacidad: {{ mesa.capacidad }} personas</span>
+          </div>
+          <div *ngIf="mesa.descripcion" class="info-item">
+            <i class="fas fa-info-circle"></i>
+            <span>{{ mesa.descripcion }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="mesa-actions">
+        <button class="btn-reservar" (click)="reservarMesa(mesa)">
+          <i class="fas fa-calendar-plus"></i>
+          <span>Reservar Mesa</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="mesasDisponibles.length === 0" class="empty-state">
+    <div class="empty-card">
+      <i class="fas fa-table"></i>
+      <h3>No hay mesas disponibles</h3>
+      <p>Intenta más tarde o contacta al restaurante</p>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Reservar Mesa -->
+<div class="modal" *ngIf="showModal">
+  <div class="modal-content">
+    <h3>Reservar Mesa {{ mesaSeleccionada?.numeroMesa }}</h3>
+    <div class="reserva-info" *ngIf="usuarioActual">
+      <p><strong>Usuario:</strong> {{ usuarioActual.nombre }}</p>
+      <p><strong>Email:</strong> {{ usuarioActual.email }}</p>
+    </div>
+    <div class="horario-info">
+      <i class="fas fa-clock"></i>
+      <p><strong>Horario de reservas:</strong> 8:00 AM - 3:00 PM</p>
+      <p class="horario-note">Los pedidos se entregarán a la hora de tu reserva</p>
+    </div>
+    <form (ngSubmit)="confirmarReserva()" #reservaForm="ngForm">
+      <label>Fecha:
+        <input type="date"
+               [(ngModel)]="fechaSeleccionada"
+               name="fechaSeleccionada"
+               [min]="minFecha"
+               required
+               (change)="onFechaChange()" />
+      </label>
+      <label>Hora:
+        <select [(ngModel)]="horaSeleccionada" name="horaSeleccionada" required (change)="onHoraChange()">
+          <option value="" disabled selected>Selecciona una hora</option>
+          <option *ngFor="let hora of horasPermitidas" [value]="hora">{{ hora }}</option>
+        </select>
+      </label>
+      <label>Número de personas:
+        <input type="number" [(ngModel)]="numPersonas" name="numPersonas" min="1" [max]="mesaSeleccionada?.capacidad || 10" required />
+      </label>
+      <div class="modal-actions">
+        <button type="submit" class="btn-reservar" [disabled]="reservando || !reservaForm.form.valid || !horaValida">{{ reservando ? 'Reservando...' : 'Confirmar Reserva' }}</button>
+        <button type="button" class="btn-cancelar" (click)="closeModal()">Cancelar</button>
+      </div>
+      <div *ngIf="reservaError" class="error-message">{{ reservaError }}</div>
+      <div *ngIf="reservaSuccess" class="success-message">{{ reservaSuccess }}</div>
+    </form>
+  </div>
+</div>

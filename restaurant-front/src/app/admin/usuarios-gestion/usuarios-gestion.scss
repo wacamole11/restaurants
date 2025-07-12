@@ -1,0 +1,213 @@
+.usuarios-gestion-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.btn {
+  padding: 6px 18px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 8px;
+  font-size: 1rem;
+  transition: background 0.2s, box-shadow 0.2s;
+  box-shadow: 0 1px 2px rgba(25, 118, 210, 0.04);
+}
+.btn-primary { background: #1976d2; color: #fff; }
+.btn-primary:hover { background: #125ea7; }
+.btn-info { background: #0288d1; color: #fff; }
+.btn-info:hover { background: #02669b; }
+.btn-danger { background: #d32f2f; color: #fff; }
+.btn-danger:hover { background: #a31515; }
+.btn-secondary { background: #757575; color: #fff; }
+.btn-secondary:hover { background: #565656; }
+.btn-success { background: #388e3c; color: #fff; }
+.btn-success:hover { background: #256225; }
+.btn-sm { font-size: 0.95rem; padding: 5px 14px; }
+
+.usuarios-list {
+  margin-top: 24px;
+}
+
+.usuarios-table-wrapper {
+  overflow-x: auto;
+}
+.usuarios-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: #f5f7fa;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(25, 118, 210, 0.07);
+  margin-top: 8px;
+}
+.usuarios-table th, .usuarios-table td {
+  padding: 14px 12px;
+  text-align: left;
+}
+.usuarios-table th {
+  background: #e3eaf4;
+  font-weight: 600;
+  color: #1976d2;
+  border-bottom: 2px solid #dbe6f6;
+}
+.usuarios-table tr:not(:last-child) td {
+  border-bottom: 1px solid #e0e0e0;
+}
+.estado-activo {
+  color: #388e3c;
+  font-weight: 600;
+}
+.estado-inactivo {
+  color: #d32f2f;
+  font-weight: 600;
+}
+.no-data {
+  color: #757575;
+  text-align: center;
+  margin: 32px 0;
+}
+.error-message {
+  color: #d32f2f;
+  margin: 16px 0;
+  text-align: center;
+}
+
+/* Modal */
+.modal {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+.modal-content {
+  background: #fff;
+  border-radius: 10px;
+  padding: 32px 24px;
+  min-width: 320px;
+  max-width: 95vw;
+  box-shadow: 0 8px 32px rgba(25, 118, 210, 0.10);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.modal-content h3 {
+  margin-top: 0;
+}
+.modal-content label {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+  font-weight: 500;
+  color: #1976d2;
+}
+.modal-content input,
+.modal-content select,
+.modal-content textarea {
+  margin-top: 4px;
+  padding: 7px 10px;
+  border: 1px solid #b0bec5;
+  border-radius: 4px;
+  font-size: 1em;
+  background: #f8fafc;
+  transition: border 0.2s;
+}
+.modal-content input:focus,
+.modal-content select:focus,
+.modal-content textarea:focus {
+  border: 1.5px solid #1976d2;
+  outline: none;
+  background: #fff;
+}
+.modal-content select[multiple] {
+  min-height: 60px;
+}
+.modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 12px;
+}
+
+.filtros-bar {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 18px;
+  align-items: center;
+}
+.filtros-bar input[type="text"] {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1em;
+}
+.filtros-bar select {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1em;
+  background: #f8f9fa;
+}
+
+.alert-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 22px;
+  border-radius: 8px;
+  margin-bottom: 18px;
+  font-size: 1.08em;
+  font-weight: 500;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  outline: none;
+}
+.alert-banner.success {
+  background: #e8f5e9;
+  color: #388e3c;
+  border: 1px solid #c8e6c9;
+}
+.alert-banner.error {
+  background: #ffebee;
+  color: #d32f2f;
+  border: 1px solid #ffcdd2;
+}
+.close-alert {
+  background: none;
+  border: none;
+  font-size: 1.5em;
+  color: inherit;
+  cursor: pointer;
+  margin-left: 18px;
+  line-height: 1;
+}
+
+// Modal de confirmación de eliminación
+.modal[aria-modal="true"] .modal-content {
+  border-top: 6px solid #d32f2f;
+  outline: none;
+}
+.modal[aria-modal="true"] h3 {
+  color: #d32f2f;
+}
+#btn-confirm-delete:focus {
+  outline: 2px solid #d32f2f;
+  outline-offset: 2px;
+}
+
+@media (max-width: 700px) {
+  .usuarios-gestion-container {
+    padding: 8px;
+  }
+  .usuarios-table th, .usuarios-table td {
+    padding: 8px 4px;
+    font-size: 0.98em;
+  }
+  .modal-content {
+    padding: 16px 6px;
+  }
+}

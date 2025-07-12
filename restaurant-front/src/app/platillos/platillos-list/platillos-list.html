@@ -1,0 +1,10 @@
+<h2>Listado de Platillos</h2>
+<div *ngIf="loading">Cargando platillos...</div>
+<div *ngIf="error" style="color: red;">{{ error }}</div>
+<ul *ngIf="!loading && !error">
+  <li *ngFor="let platillo of platillos">
+    <strong>{{ platillo.nombre }}</strong> - {{ platillo.categoria }} - {{ platillo.precio | currency:'USD' }}
+    <span *ngIf="platillo.descripcion">({{ platillo.descripcion }})</span>
+    <span *ngIf="!platillo.disponible" style="color: orange;">[No disponible]</span>
+  </li>
+</ul>

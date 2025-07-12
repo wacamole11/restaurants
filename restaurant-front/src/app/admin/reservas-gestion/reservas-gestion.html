@@ -1,0 +1,333 @@
+<div class="reservas-gestion-container">
+  <h2>Gestión de Reservas</h2>
+
+  <!-- Banner de alerta -->
+  <div *ngIf="showAlert" [attr.role]="alertType === 'error' ? 'alert' : 'status'" tabindex="0" class="alert-banner" [ngClass]="alertType">
+    <span>{{ alertMessage }}</span>
+    <button class="close-alert" (click)="showAlert = false" aria-label="Cerrar alerta">&times;</button>
+  </div>
+
+  <!-- Filtros y búsqueda -->
+  <div class="filtros-section">
+    <h3 class="filtros-title">
+      <i class="fas fa-sliders-h"></i>
+      Filtros de Búsqueda
+    </h3>
+    <div class="filtros-bar">
+      <div class="filter-group">
+        <i class="fas fa-search filter-icon"></i>
+        <input type="text" placeholder="Buscar por cliente, email o mesa..." [(ngModel)]="searchTerm" />
+      </div>
+      <div class="filter-group">
+        <i class="fas fa-filter filter-icon"></i>
+        <select [(ngModel)]="filtroEstado">
+          <option value="todos">Todos los estados</option>
+          <option value="PENDIENTE">Pendiente</option>
+          <option value="CONFIRMADA">Confirmada</option>
+          <option value="CANCELADA">Cancelada</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <i class="fas fa-calendar-alt filter-icon"></i>
+        <input type="date" [(ngModel)]="filtroFecha" placeholder="Filtrar por fecha" />
+      </div>
+    </div>
+  </div>
+
+  <!-- Botón crear -->
+  <button class="btn btn-primary" (click)="openCreateModal()">+ Nueva Reserva</button>
+
+  <!-- Indicador de carga -->
+  <app-spinner *ngIf="loading"></app-spinner>
+  <!-- Error -->
+  <div *ngIf="error" class="error-message">{{ error }}</div>
+
+  <!-- Listado de reservas -->
+  <div class="reservas-list" *ngIf="!loading && !error">
+    <div *ngIf="reservasFiltradas.length === 0" class="no-data">
+      <i class="fas fa-calendar-check"></i>
+      <h3>No hay reservas que coincidan con la búsqueda</h3>
+      <p>Intenta ajustar los filtros o crear una nueva reserva</p>
+    </div>
+    
+    <div class="reservas-table-wrapper" *ngIf="reservasFiltradas.length > 0">
+      <table class="reservas-table">
+        <thead>
+          <tr>
+            <th>Cliente</th>
+            <th>Mesa</th>
+            <th>Fecha/Hora</th>
+            <th>Personas</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let reserva of reservasFiltradas">
+            <td>{{ reserva.usuarioNombre }}</td>
+            <td>{{ reserva.mesaNombre }}</td>
+            <td>{{ reserva.fechaReserva | date:'short' }}</td>
+            <td>{{ reserva.numPersonas }}</td>
+            <td>
+              <span [class.estado-pendiente]="reserva.estado === 'PENDIENTE'"
+                    [class.estado-confirmada]="reserva.estado === 'CONFIRMADA'"
+                    [class.estado-cancelada]="reserva.estado === 'CANCELADA'">
+                {{ reserva.estado }}
+              </span>
+            </td>
+            <td>
+              <button class="btn btn-sm btn-info" (click)="openEditModal(reserva)" title="Editar reserva">
+                <i class="fas fa-edit"></i>
+                Editar
+              </button>
+              <button class="btn btn-sm btn-danger" 
+                      (click)="cancelarReserva(reserva)"
+                      [disabled]="reserva.estado === 'CANCELADA'"
+                      title="Cancelar reserva">Cancelar</button>
+              <button class="btn btn-sm btn-secondary" (click)="openViewModal(reserva)" title="Ver detalles">
+                <i class="fas fa-eye"></i>
+                Ver
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para ver pedidos de la reserva -->
+<div class="modal" *ngIf="showPedidosModal" role="dialog" aria-modal="true" aria-labelledby="modalPedidosTitle">
+  <div class="modal-content">
+    <h3 id="modalPedidosTitle">Pedidos de la Reserva #{{ reservaVer?.id }}</h3>
+    
+    <!-- Indicador de carga -->
+    <div *ngIf="loadingPedidos" class="loading-container">
+      <div class="loading-spinner">
+        <i class="fas fa-spinner fa-spin"></i>
+        <p>Cargando pedidos...</p>
+      </div>
+    </div>
+
+    <!-- Lista de pedidos -->
+    <div *ngIf="!loadingPedidos" class="pedidos-content">
+      <!-- Sin pedidos -->
+      <div *ngIf="pedidosReserva.length === 0" class="no-pedidos">
+        <i class="fas fa-utensils"></i>
+        <p>No hay pedidos asociados a esta reserva.</p>
+      </div>
+
+      <!-- Con pedidos -->
+      <div *ngIf="pedidosReserva.length > 0" class="pedidos-list">
+        <div *ngFor="let pedido of pedidosReserva" class="pedido-item">
+          <div class="pedido-header">
+            <div class="pedido-id">
+              <span class="id-number">#{{ pedido.id }}</span>
+            </div>
+            <div class="pedido-status" [class]="getEstadoClass(pedido.estado)">
+              <i class="fas fa-circle"></i>
+              <span>{{ getEstadoText(pedido.estado) }}</span>
+            </div>
+          </div>
+          
+          <div class="pedido-content">
+            <div class="pedido-info">
+              <div class="info-item">
+                <i class="fas fa-dollar-sign"></i>
+                <span><strong>Total:</strong> S/ {{ pedido.total | number:'1.2-2' }}</span>
+              </div>
+              <div class="info-item" *ngIf="pedido.fechaCreacion">
+                <i class="fas fa-calendar-plus"></i>
+                <span><strong>Creado:</strong> {{ pedido.fechaCreacion | date:'short' }}</span>
+              </div>
+              <div class="info-item" *ngIf="pedido.fechaCierre">
+                <i class="fas fa-calendar-check"></i>
+                <span><strong>Completado:</strong> {{ pedido.fechaCierre | date:'short' }}</span>
+              </div>
+            </div>
+
+            <!-- Detalles del pedido -->
+            <div *ngIf="pedido.detalles && pedido.detalles.length > 0" class="pedido-detalles">
+              <h4>Productos:</h4>
+              <div class="detalles-list">
+                <div *ngFor="let detalle of pedido.detalles" class="detalle-item">
+                  <span class="producto-nombre">{{ detalle.platilloNombre }}</span>
+                  <span class="cantidad">x{{ detalle.cantidad }}</span>
+                  <span class="precio">S/ {{ (detalle.precioUnitario * detalle.cantidad) | number:'1.2-2' }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="pedido-actions">
+            <button *ngIf="pedido.estado !== 'cancelado' && pedido.estado !== 'completado'" 
+                    class="btn btn-danger btn-sm" 
+                    (click)="cancelarPedido(pedido)" 
+                    [disabled]="cancelandoPedido"
+                    title="Cancelar pedido">
+              <i class="fas fa-times"></i>
+              {{ cancelandoPedido ? 'Cancelando...' : 'Cancelar' }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="modal-actions">
+      <button class="btn btn-secondary" (click)="closePedidosModal()">
+        <i class="fas fa-arrow-left"></i> Volver a Reserva
+      </button>
+      <button class="btn btn-danger" (click)="closeAllModals()">
+        <i class="fas fa-times"></i> Cerrar Todo
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para crear nueva reserva -->
+<div class="modal" *ngIf="showCreateModal" role="dialog" aria-modal="true" aria-labelledby="modalCreateTitle">
+  <div class="modal-content">
+    <h3 id="modalCreateTitle">Crear Nueva Reserva</h3>
+    <div *ngIf="createError" class="error-message">{{ createError }}</div>
+    <div *ngIf="createSuccess" class="success-message">{{ createSuccess }}</div>
+    
+    <form (ngSubmit)="createReserva()" #createForm="ngForm">
+      <div class="form-group">
+        <label>Cliente:</label>
+        <select [(ngModel)]="formReserva.usuarioId" name="usuarioId" required>
+          <option value="">Selecciona un cliente</option>
+          <option *ngFor="let usuario of usuarios" [value]="usuario.id">
+            {{ usuario.nombre }} ({{ usuario.email }})
+          </option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label>Mesa:</label>
+        <select [(ngModel)]="formReserva.mesaId" name="mesaId" required>
+          <option value="">Selecciona una mesa</option>
+          <option *ngFor="let mesa of mesas" [value]="mesa.id">
+            Mesa {{ mesa.numeroMesa }} ({{ mesa.capacidad }} personas)
+          </option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label>Fecha y Hora:</label>
+        <input type="datetime-local" [(ngModel)]="formReserva.fechaReserva" name="fechaReserva" required />
+      </div>
+      
+      <div class="form-group">
+        <label>Número de Personas:</label>
+        <input type="number" [(ngModel)]="formReserva.numPersonas" name="numPersonas" min="1" required />
+      </div>
+      
+      <div class="modal-actions">
+        <button type="submit" class="btn btn-primary" [disabled]="creating || !createForm.form.valid">
+          {{ creating ? 'Creando...' : 'Crear Reserva' }}
+        </button>
+        <button type="button" class="btn btn-secondary" (click)="closeCreateModal()">Cancelar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Modal para editar reserva -->
+<div class="modal" *ngIf="showEditModal" role="dialog" aria-modal="true" aria-labelledby="modalEditTitle">
+  <div class="modal-content">
+    <h3 id="modalEditTitle">Editar Reserva #{{ reservaEditando?.id }}</h3>
+    <div *ngIf="editError" class="error-message">{{ editError }}</div>
+    <div *ngIf="editSuccess" class="success-message">{{ editSuccess }}</div>
+    
+    <form (ngSubmit)="updateReserva()" #editForm="ngForm">
+      <div class="form-group">
+        <label>Cliente:</label>
+        <select [(ngModel)]="formReserva.usuarioId" name="usuarioId" required>
+          <option value="">Selecciona un cliente</option>
+          <option *ngFor="let usuario of usuarios" [value]="usuario.id">
+            {{ usuario.nombre }} ({{ usuario.email }})
+          </option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label>Mesa:</label>
+        <select [(ngModel)]="formReserva.mesaId" name="mesaId" required>
+          <option value="">Selecciona una mesa</option>
+          <option *ngFor="let mesa of mesas" [value]="mesa.id">
+            Mesa {{ mesa.numeroMesa }} ({{ mesa.capacidad }} personas)
+          </option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label>Fecha y Hora:</label>
+        <input type="datetime-local" [(ngModel)]="formReserva.fechaReserva" name="fechaReserva" required />
+      </div>
+      
+      <div class="form-group">
+        <label>Número de Personas:</label>
+        <input type="number" [(ngModel)]="formReserva.numPersonas" name="numPersonas" min="1" required />
+      </div>
+      
+      <div class="modal-actions">
+        <button type="submit" class="btn btn-primary" [disabled]="editing || !editForm.form.valid">
+          {{ editing ? 'Actualizando...' : 'Actualizar Reserva' }}
+        </button>
+        <button type="button" class="btn btn-secondary" (click)="closeEditModal()">Cancelar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Modal para ver reserva -->
+<div class="modal" *ngIf="showViewModal" role="dialog" aria-modal="true" aria-labelledby="modalViewTitle">
+  <div class="modal-content">
+    <h3 id="modalViewTitle">Detalles de la Reserva #{{ reservaVer?.id }}</h3>
+    
+    <div class="reserva-details" *ngIf="reservaVer">
+      <div class="detail-item">
+        <strong>Cliente:</strong> {{ reservaVer.usuarioNombre }}
+      </div>
+      <div class="detail-item">
+        <strong>Email:</strong> {{ reservaVer.usuarioEmail }}
+      </div>
+      <div class="detail-item">
+        <strong>Mesa:</strong> {{ reservaVer.mesaNombre }}
+      </div>
+      <div class="detail-item">
+        <strong>Fecha y Hora:</strong> {{ reservaVer.fechaReserva | date:'full' }}
+      </div>
+      <div class="detail-item">
+        <strong>Número de Personas:</strong> {{ reservaVer.numPersonas }}
+      </div>
+      <div class="detail-item">
+        <strong>Estado:</strong> 
+        <span [class.estado-pendiente]="reservaVer.estado === 'PENDIENTE'"
+              [class.estado-confirmada]="reservaVer.estado === 'CONFIRMADA'"
+              [class.estado-cancelada]="reservaVer.estado === 'CANCELADA'">
+          {{ reservaVer.estado }}
+        </span>
+      </div>
+    </div>
+    
+    <div class="modal-actions">
+      <button class="btn btn-secondary" (click)="openPedidosModal(reservaVer!)" *ngIf="reservaVer">
+        <i class="fas fa-utensils"></i> Ver Pedidos
+      </button>
+      <button class="btn btn-secondary" (click)="closeViewModal()">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de confirmación de cancelación -->
+<div class="modal" *ngIf="showCancelModal" role="dialog" aria-modal="true" aria-labelledby="modalCancelTitle">
+  <div class="modal-content">
+    <h3 id="modalCancelTitle">¿Cancelar reserva?</h3>
+    <p>¿Estás seguro de que deseas cancelar la reserva del cliente <strong>{{ reservaACancelar?.usuarioNombre }}</strong> para el {{ reservaACancelar?.fechaReserva | date:'short' }}? Esta acción no se puede deshacer.</p>
+    <div class="modal-actions">
+      <button id="btn-confirm-cancel" class="btn btn-danger" (click)="confirmCancelarReserva()">Sí, cancelar</button>
+      <button class="btn btn-secondary" (click)="closeCancelModal()">Cancelar</button>
+    </div>
+  </div>
+</div>

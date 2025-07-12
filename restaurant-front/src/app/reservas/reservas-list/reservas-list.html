@@ -1,0 +1,10 @@
+<div class="list-container">
+  <h2>Listado de Reservas</h2>
+  <app-spinner *ngIf="loading"></app-spinner>
+  <div *ngIf="error" class="error-message">{{ error }}</div>
+  <ul *ngIf="!loading && !error" class="item-list">
+    <li *ngFor="let reserva of reservas" class="item-card">
+      <strong>Fecha:</strong> {{ reserva.fechaReserva | date:'short' }} - <strong>Mesa:</strong> {{ reserva.mesaNombre }} - <strong>Personas:</strong> {{ reserva.numPersonas }} - <strong>Estado:</strong> {{ reserva.estado }}
+    </li>
+  </ul>
+</div>

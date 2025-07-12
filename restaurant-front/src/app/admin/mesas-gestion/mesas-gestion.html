@@ -1,0 +1,295 @@
+<div class="mesas-gestion">
+  <!-- Header -->
+  <div class="page-header">
+    <div class="header-content">
+      <h1>Gestión de Mesas</h1>
+      <p>Administra las mesas del restaurante</p>
+    </div>
+    <div class="header-actions">
+      <button class="btn-primary" (click)="openCreateModal()">
+        <i class="fas fa-plus"></i>
+        Nueva Mesa
+      </button>
+    </div>
+  </div>
+
+  <!-- Banner de alerta -->
+  <div *ngIf="showAlert" [attr.role]="alertType === 'error' ? 'alert' : 'status'" tabindex="0" class="alert-banner" [ngClass]="alertType">
+    <span>{{ alertMessage }}</span>
+    <button class="close-alert" (click)="showAlert = false" aria-label="Cerrar alerta">&times;</button>
+  </div>
+
+  <!-- Filtros y búsqueda -->
+  <div class="filtros-bar">
+    <input type="text" placeholder="Buscar por número de mesa o descripción..." [(ngModel)]="searchTerm" />
+    <select [(ngModel)]="filtroEstado">
+      <option value="todos">Todos los estados</option>
+      <option value="DISPONIBLE">Disponible</option>
+      <option value="OCUPADA">Ocupada</option>
+      <option value="RESERVADA">Reservada</option>
+      <option value="MANTENIMIENTO">Mantenimiento</option>
+    </select>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="stats-container">
+    <div class="stat-card">
+      <div class="stat-icon available">
+        <i class="fas fa-check-circle"></i>
+      </div>
+      <div class="stat-content">
+        <h3>{{ getAvailableMesas() }}</h3>
+        <p>Disponibles</p>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon occupied">
+        <i class="fas fa-users"></i>
+      </div>
+      <div class="stat-content">
+        <h3>{{ getOccupiedMesas() }}</h3>
+        <p>Ocupadas</p>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon reserved">
+        <i class="fas fa-calendar-check"></i>
+      </div>
+      <div class="stat-content">
+        <h3>{{ getReservedMesas() }}</h3>
+        <p>Reservadas</p>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon total">
+        <i class="fas fa-table"></i>
+      </div>
+      <div class="stat-content">
+        <h3>{{ mesas.length || 0 }}</h3>
+        <p>Total</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <!-- Loading State -->
+    <app-spinner *ngIf="loading"></app-spinner>
+
+    <!-- Error State -->
+    <div *ngIf="error" class="error-container">
+      <div class="error-card">
+        <i class="fas fa-exclamation-triangle"></i>
+        <h3>Error al cargar las mesas</h3>
+        <p>{{ error }}</p>
+        <button class="btn-secondary" (click)="loadMesas()">
+          <i class="fas fa-redo"></i>
+          Reintentar
+        </button>
+      </div>
+    </div>
+
+    <!-- Mesas Table -->
+    <div *ngIf="!loading && !error" class="table-container">
+      <div *ngIf="mesasFiltradas.length === 0" class="no-data">
+        <i class="fas fa-table"></i>
+        <h3>No hay mesas que coincidan con la búsqueda</h3>
+        <p>Intenta ajustar los filtros o crear una nueva mesa</p>
+      </div>
+      
+      <div *ngIf="mesasFiltradas.length > 0" class="mesas-table-wrapper">
+        <table class="mesas-table">
+          <thead>
+            <tr>
+              <th>Número</th>
+              <th>Capacidad</th>
+              <th>Estado</th>
+              <th>Descripción</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let mesa of mesasFiltradas" [class]="'mesa-row mesa-' + mesa.estado.toLowerCase()">
+              <td class="mesa-number">{{ mesa.numeroMesa }}</td>
+              <td>{{ mesa.capacidad }} personas</td>
+              <td>
+                <span class="status-badge" [class]="'status-' + mesa.estado.toLowerCase()">
+                  {{ mesa.estado }}
+                </span>
+              </td>
+              <td>{{ mesa.descripcion || 'Sin descripción' }}</td>
+              <td class="actions">
+                <button class="btn btn-sm btn-info" (click)="editMesa(mesa)" title="Editar mesa">
+                  <i class="fas fa-edit"></i>
+                  Editar
+                </button>
+                <button class="btn btn-sm btn-danger" (click)="deleteMesa(mesa.id!)" title="Eliminar mesa">
+                  <i class="fas fa-trash"></i>
+                  Eliminar
+                </button>
+                <button class="btn btn-sm btn-secondary" (click)="viewMesa(mesa)" title="Ver detalles">
+                  <i class="fas fa-eye"></i>
+                  Ver
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!loading && !error && (!mesas || mesas.length === 0)" class="empty-state">
+      <div class="empty-card">
+        <i class="fas fa-table"></i>
+        <h3>No hay mesas registradas</h3>
+        <p>Comienza agregando la primera mesa del restaurante</p>
+        <button class="btn-primary" (click)="openCreateModal()">
+          <i class="fas fa-plus"></i>
+          Agregar Mesa
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal para crear/editar mesa -->
+  <div *ngIf="showModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalMesaTitle">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2 id="modalMesaTitle">{{ editingMesa ? 'Editar Mesa' : 'Nueva Mesa' }}</h2>
+        <button class="btn-close" (click)="closeModal()" aria-label="Cerrar modal">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      
+      <form class="modal-form" (ngSubmit)="saveMesa()" #mesaForm="ngForm">
+        <div class="form-group">
+          <label for="numeroMesa">Número de Mesa *</label>
+          <input 
+            type="number" 
+            id="numeroMesa" 
+            name="numeroMesa"
+            [(ngModel)]="formMesa.numeroMesa" 
+            required 
+            min="1"
+            class="form-control">
+        </div>
+
+        <div class="form-group">
+          <label for="capacidad">Capacidad *</label>
+          <input 
+            type="number" 
+            id="capacidad" 
+            name="capacidad"
+            [(ngModel)]="formMesa.capacidad" 
+            required 
+            min="1"
+            max="20"
+            class="form-control">
+        </div>
+
+        <div class="form-group">
+          <label for="estado">Estado *</label>
+          <select 
+            id="estado" 
+            name="estado"
+            [(ngModel)]="formMesa.estado" 
+            required
+            class="form-control">
+            <option value="">Seleccionar estado</option>
+            <option value="DISPONIBLE">Disponible</option>
+            <option value="OCUPADA">Ocupada</option>
+            <option value="RESERVADA">Reservada</option>
+            <option value="MANTENIMIENTO">Mantenimiento</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="descripcion">Descripción</label>
+          <textarea 
+            id="descripcion" 
+            name="descripcion"
+            [(ngModel)]="formMesa.descripcion" 
+            rows="3"
+            class="form-control"
+            placeholder="Descripción opcional de la mesa..."></textarea>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" (click)="closeModal()">
+            Cancelar
+          </button>
+          <button type="submit" class="btn btn-success" [disabled]="!mesaForm.valid || saving">
+            <i class="fas fa-spinner fa-spin" *ngIf="saving"></i>
+            {{ saving ? 'Guardando...' : (editingMesa ? 'Actualizar' : 'Crear') }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal de Detalles de Mesa -->
+  <div *ngIf="showDetailsModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalDetallesTitle">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2 id="modalDetallesTitle">Detalles de la Mesa</h2>
+        <button class="btn-close" (click)="closeDetailsModal()" aria-label="Cerrar modal">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-form">
+        <div class="form-group">
+          <label>Número de Mesa:</label>
+          <div><strong>{{ detailsMesa?.numeroMesa }}</strong></div>
+        </div>
+        <div class="form-group">
+          <label>Capacidad:</label>
+          <div>{{ detailsMesa?.capacidad }} personas</div>
+        </div>
+        <div class="form-group">
+          <label>Estado:</label>
+          <div>
+            <span class="status-badge" [class]="'status-' + detailsMesa?.estado?.toLowerCase()">
+              {{ detailsMesa?.estado }}
+            </span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Descripción:</label>
+          <div>{{ detailsMesa?.descripcion || 'Sin descripción' }}</div>
+        </div>
+
+        <div *ngIf="detailsMesa && detailsMesa.estado && detailsMesa.estado.toUpperCase() === 'RESERVADA'">
+          <hr>
+          <h3>Datos de la Reserva</h3>
+          <div *ngIf="loadingReserva">Cargando reserva...</div>
+          <div *ngIf="reservaError" class="error-message">{{ reservaError }}</div>
+          <div *ngIf="reservaMesa">
+            <div class="form-group"><label>Cliente:</label> <div>{{ reservaMesa.nombreCliente }}</div></div>
+            <div class="form-group"><label>Teléfono:</label> <div>{{ reservaMesa.telefono }}</div></div>
+            <div class="form-group"><label>Fecha:</label> <div>{{ reservaMesa.fecha }}</div></div>
+            <div class="form-group"><label>Hora:</label> <div>{{ reservaMesa.hora }}</div></div>
+            <div class="form-group"><label>Cantidad de Personas:</label> <div>{{ reservaMesa.cantidadPersonas }}</div></div>
+            <div class="form-group"><label>Estado de la Reserva:</label> <div>{{ reservaMesa.estado }}</div></div>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" (click)="closeDetailsModal()">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de confirmación de eliminación -->
+  <div class="modal" *ngIf="showDeleteModal" role="dialog" aria-modal="true" aria-labelledby="modalDeleteTitle">
+    <div class="modal-content">
+      <h3 id="modalDeleteTitle">¿Eliminar mesa?</h3>
+      <p>¿Estás seguro de que deseas eliminar la mesa <strong>{{ mesaAEliminar?.numeroMesa }}</strong>? Esta acción no se puede deshacer.</p>
+      <div class="modal-actions">
+        <button id="btn-confirm-delete-mesa" class="btn btn-danger" (click)="confirmDeleteMesa()">Sí, eliminar</button>
+        <button class="btn btn-secondary" (click)="closeDeleteModal()">Cancelar</button>
+      </div>
+    </div>
+  </div>
+</div>

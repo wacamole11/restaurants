@@ -1,0 +1,51 @@
+<<div class="reportes-container">
+  <h2>Reportes</h2>
+
+  <section class="report-section">
+    <h3>Reservas por fecha</h3>
+    <div class="input-group">
+      <input type="date" [(ngModel)]="fecha" />
+      <button (click)="buscarReservasPorFecha()">Buscar</button>
+    </div>
+    <app-spinner *ngIf="loadingReservas"></app-spinner>
+    <div *ngIf="errorReservas" class="error-message">{{ errorReservas }}</div>
+    <ul *ngIf="reservas.length && !loadingReservas && !errorReservas" class="report-list">
+      <li *ngFor="let reserva of reservas">
+        Usuario: {{ reserva.usuario?.nombre }} | Mesa: {{ reserva.mesa?.numeroMesa }} | Personas: {{ reserva.numPersonas }} | Estado: {{ reserva.estado }}
+      </li>
+    </ul>
+    <div *ngIf="!reservas.length && !loadingReservas && !errorReservas && fecha" class="no-data-message">
+      No hay reservas para la fecha seleccionada.
+    </div>
+  </section>
+
+  <section class="report-section">
+    <h3>Platillos más pedidos</h3>
+    <button (click)="cargarPlatillosMasPedidos()">Ver platillos</button>
+    <app-spinner *ngIf="loadingPlatillos"></app-spinner>
+    <div *ngIf="errorPlatillos" class="error-message">{{ errorPlatillos }}</div>
+    <ul *ngIf="platillos.length && !loadingPlatillos && !errorPlatillos" class="report-list">
+      <li *ngFor="let platillo of platillos">
+        {{ platillo.nombre }} - Pedidos: {{ platillo.cantidadPedidos || '0' }}
+      </li>
+    </ul>
+    <div *ngIf="!platillos.length && !loadingPlatillos && !errorPlatillos" class="no-data-message">
+      No hay datos de platillos más pedidos.
+    </div>
+  </section>
+
+  <section class="report-section">
+    <h3>Ocupación de mesas</h3>
+    <button (click)="cargarOcupacionMesas()">Ver ocupación</button>
+    <app-spinner *ngIf="loadingMesas"></app-spinner>
+    <div *ngIf="errorMesas" class="error-message">{{ errorMesas }}</div>
+    <ul *ngIf="mesas.length && !loadingMesas && !errorMesas" class="report-list">
+      <li *ngFor="let mesa of mesas">
+        {{ mesa.numeroMesa }} - Estado: {{ mesa.estado }}
+      </li>
+    </ul>
+    <div *ngIf="!mesas.length && !loadingMesas && !errorMesas" class="no-data-message">
+      No hay datos de ocupación de mesas.
+    </div>
+  </section>
+</div>
